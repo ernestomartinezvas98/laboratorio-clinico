@@ -1,0 +1,235 @@
+const API_URL = 'http://localhost:3000/api';
+
+// Manejar login
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+   // Mostrar loading
+    Swal.fire({
+        title: 'Iniciando sesión...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+ 
+
+
+      // Redirigir según el rol
+      switch(data.usuario.rol) {
+        case 'paciente':
+          window.location.href = 'panel-paciente.html';
+          break;
+        case 'admin':
+          window.location.href = 'panel-admin.html';
+          break;
+        case 'doctor':
+          window.location.href = 'panel-doctor.html';
+          break;
+        default:
+          window.location.href = 'login.html';
+      }
+
+    } else {
+                Swal.fire({
+                icon: 'error',
+                title: 'Error de autenticación',
+                text: data.error || 'Credenciales inválidas. Verifica tu correo y contraseña.',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor. Verifica que el servidor esté corriendo.',
+            confirmButtonColor: '#e53e3e'
+        });
+    }
+});
+
+// Manejar registro
+document.getElementById('registerLink').addEventListener('click', () => {
+  document.getElementById('registerModal').style.display = 'block';
+});
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Validar que la fecha de nacimiento no sea futura
+    const fechaNacimiento = document.getElementById('regFechaNacimiento').value;
+    const hoy = new Date();
+    const fechaNac = new Date(fechaNacimiento);
+    
+    if (fechaNac > hoy) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Fecha inválida',
+            text: 'La fecha de nacimiento no puede ser futura. Por favor verifica.',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
+  
+  const usuarioData = {
+    dui: document.getElementById('regDui').value,
+    nombres: document.getElementById('regNombres').value,
+    apellidos: document.getElementById('regApellidos').value,
+    fecha_nacimiento: document.getElementById('regFechaNacimiento').value,
+    telefono: document.getElementById('regTelefono').value,
+    email: document.getElementById('regEmail').value,
+    password: document.getElementById('regPassword').value,
+    rol: 'paciente'
+  };
+
+  // Mostrar loading
+    Swal.fire({
+        title: 'Registrando usuario...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+  
+  try {
+    const response = await fetch(`${API_URL}/auth/registro`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(usuarioData)
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Registro exitoso!',
+                text: 'Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.',
+                confirmButtonColor: '#667eea'
+            });
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerForm').reset();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al registrar',
+                text: data.error || 'No se pudo completar el registro. Verifica los datos.',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor.',
+            confirmButtonColor: '#e53e3e'
+        });
+    }
+});
+//////////////////
+// Manejar recuperación de contraseña
+document.getElementById('forgotPassword').addEventListener('click', async () => { 
+  //const email = document.getElementById('forgotEmail').value;
+  const { value: email } = await Swal.fire({
+        title: 'Recuperar contraseña',
+        text: 'Ingresa tu correo electrónico para recibir instrucciones',
+        input: 'email',
+        inputPlaceholder: 'ejemplo@correo.com',
+        showCancelButton: true,
+        confirmButtonText: 'Enviar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#667eea',
+        cancelButtonColor: '#e53e3e',
+        inputValidator: (value) => {
+            if (!value) {
+                return '¡Debes ingresar un correo electrónico!';
+            }
+            if (!value.includes('@')) {
+                return '¡Ingresa un correo válido!';
+            }
+        }
+    });
+    
+    if (email) {
+        Swal.fire({
+            title: 'Enviando...',
+            text: 'Por favor espere',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+  /////////////////
+
+
+  try {
+    const response = await fetch(`${API_URL}/auth/recuperar-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    
+    const data = await response.json();
+
+////////////////////////
+    if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Correo enviado!',
+                    text: data.message || 'Se han enviado instrucciones a tu correo electrónico.',
+                    confirmButtonColor: '#667eea'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'El correo no está registrado en el sistema.',
+                    confirmButtonColor: '#e53e3e'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo procesar tu solicitud. Verifica tu conexión.',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    }
+});
+//////////////////
+
+// Cerrar modales
+document.querySelectorAll('.close').forEach(closeBtn => {
+  closeBtn.onclick = function() {
+    this.closest('.modal').style.display = 'none';
+  }
+});
+
+// Cerrar modal al hacer clic fuera
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+}

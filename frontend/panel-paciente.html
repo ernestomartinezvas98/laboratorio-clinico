@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Paciente - Laboratorio Clínico</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="js/health-widget.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="navbar">
+      <h2>Panel del Paciente</h2>
+      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+    </nav>
+    
+    <div class="dashboard-content">
+      <!-- Información Personal -->
+      <section class="card">
+        <h3>Mi Información Personal</h3>
+        <div id="infoPersonal"></div>
+      </section>
+      
+      <!-- Signos Vitales -->
+      <section class="card">
+        <h3>Mis Signos Vitales</h3>
+        <div id="signosVitales"></div>
+      </section>
+
+
+
+      
+      <!-- Widget de Human API - Prueba -->
+<section class="card">
+    <h3>📱 Datos desde dispositivos (Human API)</h3>
+    <div id="widget-salud-externa">
+        <button onclick="probarHumanAPI()" class="btn-primary" style="background: #667eea;">🔌 Probar conexión con Human API</button>
+        <div id="resultado-human-api" style="margin-top: 15px;"></div>
+    </div>
+</section>
+      
+      <!-- Agendar Cita -->
+      <section class="card">
+        <h3>Agendar Nueva Cita</h3>
+        <form id="agendarCitaForm">
+          <input type="date" id="fechaCita" required>
+          <input type="time" id="horaCita" required>
+          <textarea id="motivoCita" placeholder="Motivo de la cita" required></textarea>
+          <button type="submit">Agendar Cita</button>
+        </form>
+      </section>
+      
+      <!-- Mis Citas -->
+      <section class="card">
+        <h3>Mis Citas Agendadas</h3>
+        <div id="misCitas"></div>
+      </section>
+      
+      <!-- Catálogo de Exámenes -->
+      <section class="card">
+        <h3>Catálogo de Exámenes</h3>
+        <div id="catalogoExamenes"></div>
+      </section>
+      
+      <!-- Mis Resultados -->
+      <section class="card">
+        <h3>Mis Resultados de Exámenes</h3>
+        <div id="misResultados"></div>
+      </section>
+      
+      <!-- Historial Clínico -->
+      <section class="card">
+        <h3>Historial Clínico</h3>
+        <div id="historialClinico"></div>
+      </section>
+      
+      <!-- Contacto de Emergencia -->
+      <section class="card">
+        <h3>Contacto de Emergencia</h3>
+        <div id="contactoEmergencia"></div>
+      </section>
+    </div>
+  </div>
+  <script src="js/health-widget.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/panel-paciente.js"></script>
+
+  <script>
+async function probarHumanAPI() {
+    const token = localStorage.getItem('token');
+    const resultadoDiv = document.getElementById('resultado-human-api');
+    
+    resultadoDiv.innerHTML = '<p style="color: #667eea;">⏳ Conectando con Human API...</p>';
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/health-external/datos', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+            const datos = data.data;
+            resultadoDiv.innerHTML = `
+                <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h4 style="margin: 0 0 10px 0; color: #667eea;">✅ Datos obtenidos exitosamente</h4>
+                    <p><strong>👤 Perfil:</strong> ${datos.perfil.nombre}, ${datos.perfil.edad} años</p>
+                    <p><strong>⚖️ Peso:</strong> ${datos.perfil.peso} kg | <strong>📏 Altura:</strong> ${datos.perfil.altura} cm</p>
+                    <hr style="margin: 10px 0;">
+                    <p><strong>❤️ Última frecuencia cardíaca:</strong> ${datos.heart_rate[datos.heart_rate.length-1].value} lpm</p>
+                    <p><strong>🩸 Última presión arterial:</strong> ${datos.blood_pressure[datos.blood_pressure.length-1].systolic}/${datos.blood_pressure[datos.blood_pressure.length-1].diastolic} mmHg</p>
+                    <small style="color: #666;">⚠️ Estos son datos de demostración. Para datos reales, conecta tu cuenta.</small>
+                </div>
+            `;
+        } else {
+            resultadoDiv.innerHTML = '<p style="color: red;">❌ Error al obtener datos</p>';
+        }
+    } catch (error) {
+        resultadoDiv.innerHTML = `<p style="color: red;">❌ Error de conexión: ${error.message}</p>`;
+    }
+}
+</script>
+</body>
+</html>

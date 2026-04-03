@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Doctor - Laboratorio Clínico</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="navbar">
+      <h2>Panel del Doctor</h2>
+      <div class="nav-links">
+        <button class="tab-btn active" data-tab="signos">Signos Vitales</button>
+        <button class="tab-btn" data-tab="resultados">Resultados de Exámenes</button>
+        <button class="tab-btn" data-tab="historial">Historial Clínico</button>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+    </nav>
+    
+    <div class="dashboard-content">
+
+      <!-- Tab Signos Vitales -->
+      <div id="tab-signos" class="tab-content active">
+        <div class="card">
+          <h3>Registrar Signos Vitales</h3>
+          <form id="registrarSignosForm">
+            <div class="form-row">
+              <input type="text" id="signosDui" placeholder="DUI del Paciente" required>
+              <button type="button" id="buscarPacienteSignos" class="btn-secondary">Buscar</button>
+            </div>
+            <div id="infoPacienteSignos" class="info-paciente"></div>
+            <div class="form-row">
+              <input type="text" id="presionArterial" placeholder="Presión Arterial (Ej: 120/80)">
+              <input type="number" id="frecuenciaCardiaca" placeholder="Frecuencia Cardíaca">
+              <input type="number" id="temperatura" placeholder="Temperatura" step="0.1">
+            </div>
+            <div class="form-row">
+              <input type="number" id="peso" placeholder="Peso (kg)" step="0.1">
+              <input type="number" id="altura" placeholder="Altura (cm)" step="0.1">
+            </div>
+            <div class="form-row">
+              <textarea id="observaciones" placeholder="Observaciones médicas" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Registrar Signos Vitales</button>
+          </form>
+        </div>
+        
+        <div class="card">
+          <h3>Historial de Signos Vitales</h3>
+           <div id="historialSignos"></div>
+        </div>
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Presión Arterial</th>
+                    <th>Frecuencia Cardíaca</th>
+                    <th>Temperatura</th>
+                    <th>Peso</th>
+                    <th>Altura</th>
+                    <th>Observaciones</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="historialSignosBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+      
+      <!-- Tab Resultados de Exámenes -->
+      <div id="tab-resultados" class="tab-content">
+        <div class="card">
+          <h3>Agregar Resultados de Exámenes</h3>
+          <form id="agregarResultadoForm">
+            <div class="form-row">
+              <input type="text" id="resultadoDui" placeholder="DUI del Paciente" required>
+              <button type="button" id="buscarPacienteResultados" class="btn-secondary">Buscar</button>
+            </div>
+            <div id="infoPacienteResultados" class="info-paciente"></div>
+            <div class="form-row">
+              <select id="examenSeleccionado" required>
+                <option value="">Seleccionar Examen</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <textarea id="resultadoTexto" placeholder="Resultados del examen" rows="5" required></textarea>
+            </div>
+            <div class="form-row">
+              <input type="file" id="archivoResultado" accept=".pdf">
+              <small>Opcional: Adjuntar archivo PDF</small>
+            </div>
+            <button type="submit" class="btn-primary">Guardar Resultado</button>
+          </form>
+        </div>
+        
+        <div class="card">
+          <h3>Solicitudes de Exámenes Pendientes</h3>
+          <div id="solicitudesPendientes"></div>
+        </div>
+      </div>
+      
+      <!-- Tab Historial Clínico -->
+      <div id="tab-historial" class="tab-content">
+        <div class="card">
+          <h3>Registrar Historial Clínico</h3>
+          <form id="registrarHistorialForm">
+            <div class="form-row">
+              <input type="text" id="historialDui" placeholder="DUI del Paciente" required>
+              <button type="button" id="buscarPacienteHistorial" class="btn-secondary">Buscar</button>
+            </div>
+            <div id="infoPacienteHistorial" class="info-paciente"></div>
+            <div class="form-row">
+              <input type="text" id="enfermedad" placeholder="Enfermedad / Diagnóstico" required>
+              <input type="date" id="fechaInicio" required>
+            </div>
+            <div class="form-row">
+              <select id="intensidad" required>
+                <option value="">Intensidad</option>
+                <option value="Leve">Leve</option>
+                <option value="Moderada">Moderada</option>
+                <option value="Severa">Severa</option>
+                <option value="Crítica">Crítica</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <textarea id="factoresAlivio" placeholder="Factores que alivian"></textarea>
+              <textarea id="factoresEmpeoran" placeholder="Factores que empeoran"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Registrar Historial</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/panel-doctor.js"></script>
+</body>
+</html>

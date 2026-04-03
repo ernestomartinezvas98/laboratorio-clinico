@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrador - Laboratorio Clínico</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="navbar">
+      <h2>Panel de Administración</h2>
+      <div class="nav-links">
+        <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
+        <button class="tab-btn" data-tab="examenes">Exámenes</button>
+        <button class="tab-btn" data-tab="usuarios">Usuarios</button>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+    </nav>
+    
+    <div class="dashboard-content">
+      <!-- Tab de Pacientes -->
+      <div id="tab-pacientes" class="tab-content active">
+        <div class="card">
+          <h3>Registrar Nuevo Paciente</h3>
+          <form id="registrarPacienteForm">
+            <div class="form-row">
+              <input type="text" id="pacienteDui" placeholder="DUI (Ej: 12345678-9)" required>
+              <input type="text" id="pacienteNombres" placeholder="Nombres" required>
+              <input type="text" id="pacienteApellidos" placeholder="Apellidos" required>
+            </div>
+            <div class="form-row">
+              <input type="date" id="pacienteFechaNacimiento" required>
+              <input type="tel" id="pacienteTelefono" placeholder="Teléfono" required>
+              <input type="email" id="pacienteEmail" placeholder="Correo Electrónico" required>
+            </div>
+            <div class="form-row">
+              <input type="password" id="pacientePassword" placeholder="Contraseña" required>
+            </div>
+            <button type="submit" class="btn-primary">Registrar Paciente</button>
+          </form>
+        </div>
+        
+        <div class="card">
+          <h3>Lista de Pacientes Registrados</h3>
+          <div class="search-bar">
+            <input type="text" id="buscarPaciente" placeholder="Buscar por DUI, nombre o email">
+            <button id="btnBuscarPaciente" class="btn-secondary">Buscar</button>
+          </div>
+          <div id="listaPacientes">
+            <table>
+              <thead>
+                <tr><th>DUI</th><th>Nombres</th><th>Apellidos</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="tablaPacientes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tab de Exámenes -->
+      <div id="tab-examenes" class="tab-content">
+        <div class="card">
+          <h3>Catálogo de Exámenes</h3>
+          <form id="registrarExamenForm">
+            <div class="form-row">
+              <input type="text" id="examenNombre" placeholder="Nombre del examen" required>
+              <input type="number" id="examenPrecio" placeholder="Precio" step="0.01" required>
+              <input type="text" id="examenTiempo" placeholder="Tiempo de entrega (Ej: 24 horas)" required>
+            </div>
+            <button type="submit" class="btn-primary">Agregar Examen</button>
+          </form>
+        </div>
+        
+        <div class="card">
+          <h3>Lista de Exámenes</h3>
+          <div id="listaExamenes">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Tiempo Entrega</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="tablaExamenes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tab de Usuarios -->
+      <div id="tab-usuarios" class="tab-content">
+        <div class="card">
+          <h3>Gestión de Usuarios del Sistema</h3>
+          <div id="listaUsuarios">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="tablaUsuarios"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Editar Usuario -->
+  <div id="editUserModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Editar Usuario</h3>
+      <form id="editUserForm">
+        <input type="hidden" id="editUserId">
+        <input type="text" id="editUserNombres" placeholder="Nombres" required>
+        <input type="text" id="editUserApellidos" placeholder="Apellidos" required>
+        <input type="tel" id="editUserTelefono" placeholder="Teléfono" required>
+        <input type="email" id="editUserEmail" placeholder="Email" required>
+        <select id="editUserRol">
+          <option value="paciente">Paciente</option>
+          <option value="doctor">Doctor</option>
+          <option value="admin">Administrador</option>
+        </select>
+        <button type="submit">Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/panel-admin.js"></script>
+</body>
+</html>

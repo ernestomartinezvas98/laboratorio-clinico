@@ -1,0 +1,31 @@
+# Dependencias
+node_modules/
+npm-debug.log
+
+# Variables de entorno (importante: no subir contraseñas)
+.env
+.env.local
+.env.production
+
+# Base de datos local
+*.sql
+*.dump
+
+# Archivos subidos (mantener estructura pero no los archivos)
+uploads/*.pdf
+uploads/*.jpg
+uploads/*.png
+
+# Editor configuraciones
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
