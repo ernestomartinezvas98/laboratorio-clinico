@@ -5,20 +5,18 @@ const { verificarToken, verificarRol } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Registrar paciente (admin)
+//Registrar paciente (admin)
 router.post('/registrar-paciente', verificarToken, verificarRol(['admin']), async (req, res) => {
   const { dui, nombres, apellidos, fecha_nacimiento, telefono, email, password, rol } = req.body;
   
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
+    const hashedPassword = await bcrypt.hash(password, 10);   
     const result = await pool.query(
       `INSERT INTO usuarios (dui, nombres, apellidos, fecha_nacimiento, telefono, email, password, rol)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING id, dui, nombres, apellidos, email, rol`,
       [dui, nombres, apellidos, fecha_nacimiento, telefono, email, hashedPassword, rol || 'paciente']
-    );
-    
+    ); 
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error(error);
@@ -26,7 +24,7 @@ router.post('/registrar-paciente', verificarToken, verificarRol(['admin']), asyn
   }
 });
 
-// Obtener todos los pacientes
+//Obtener todos los pacientes
 router.get('/pacientes', verificarToken, verificarRol(['admin']), async (req, res) => {
   const { busqueda } = req.query;
   
@@ -37,8 +35,7 @@ router.get('/pacientes', verificarToken, verificarRol(['admin']), async (req, re
     if (busqueda) {
       query += ' AND (dui ILIKE $2 OR nombres ILIKE $2 OR apellidos ILIKE $2 OR email ILIKE $2)';
       params.push(`%${busqueda}%`);
-    }
-    
+    }   
     query += ' ORDER BY nombres ASC';
     const result = await pool.query(query, params);
     res.json(result.rows);
@@ -46,9 +43,9 @@ router.get('/pacientes', verificarToken, verificarRol(['admin']), async (req, re
     res.status(500).json({ error: 'Error al obtener pacientes' });
   }
 });
-////////////////////
 
-// Obtener un paciente por ID
+
+//Obtener un paciente por ID
 router.get('/paciente/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
     try {
         const result = await pool.query(
@@ -67,7 +64,7 @@ router.get('/paciente/:id', verificarToken, verificarRol(['admin']), async (req,
 
 
 
-// Actualizar paciente
+//Actualizar paciente
 router.put('/paciente/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
     const { nombres, apellidos, telefono, email } = req.body;
     
@@ -91,8 +88,8 @@ router.put('/paciente/:id', verificarToken, verificarRol(['admin']), async (req,
 });
 
 
-////////////////
-// Eliminar paciente
+
+//Eliminar paciente
 router.delete('/pacientes/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM usuarios WHERE id = $1 AND rol = $2 RETURNING *', 
@@ -106,10 +103,10 @@ router.delete('/pacientes/:id', verificarToken, verificarRol(['admin']), async (
     res.status(500).json({ error: 'Error al eliminar paciente' });
   }
 });
-/////////////////
 
 
-// Obtener todos los exámenes
+
+//Obtener todos los examenes
 router.get('/examenes', verificarToken, verificarRol(['admin']), async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM catalogo_examenes ORDER BY nombre');
@@ -119,7 +116,7 @@ router.get('/examenes', verificarToken, verificarRol(['admin']), async (req, res
     }
 })
 
-// Obtener un examen por ID
+//Obtener un examen por ID
 router.get('/examenes/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
     try {
         const result = await pool.query(
@@ -136,7 +133,7 @@ router.get('/examenes/:id', verificarToken, verificarRol(['admin']), async (req,
     }
 });
 
-// Crear examen
+//Crear examen
 router.post('/examenes', verificarToken, verificarRol(['admin']), async (req, res) => {
     const { nombre, precio, tiempo_entrega } = req.body;
     
@@ -151,7 +148,7 @@ router.post('/examenes', verificarToken, verificarRol(['admin']), async (req, re
     }
 });
 
-// Actualizar examen
+//Actualizar examen
 router.put('/examenes/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
     const { nombre, precio, tiempo_entrega } = req.body;
     
@@ -174,7 +171,7 @@ router.put('/examenes/:id', verificarToken, verificarRol(['admin']), async (req,
     }
 });
 
-// Eliminar examen
+//Eliminar examen
 router.delete('/examenes/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
     try {
         const result = await pool.query('DELETE FROM catalogo_examenes WHERE id = $1 RETURNING *', [req.params.id]);
@@ -189,8 +186,7 @@ router.delete('/examenes/:id', verificarToken, verificarRol(['admin']), async (r
 });
 
 
-////////////////
-// Obtener todos los usuarios
+//Obtener todos los usuarios
 router.get('/usuarios', verificarToken, verificarRol(['admin']), async (req, res) => {
   try {
     const result = await pool.query(
@@ -201,9 +197,9 @@ router.get('/usuarios', verificarToken, verificarRol(['admin']), async (req, res
     res.status(500).json({ error: 'Error al obtener usuarios' });
   }
 });
-////////////////
 
-// Obtener un usuario por ID
+
+//Obtener un usuario por ID
 router.get('/usuarios/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
   console.log('=== GET USUARIO POR ID ===');
     console.log('ID solicitado:', req.params.id);
@@ -227,8 +223,8 @@ router.get('/usuarios/:id', verificarToken, verificarRol(['admin']), async (req,
     }
 });
 
-////////////////
-// Actualizar usuario
+
+//Actualizar usuario
 router.put('/usuarios/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
   const { nombres, apellidos, telefono, email, rol } = req.body;
   
@@ -249,7 +245,7 @@ router.put('/usuarios/:id', verificarToken, verificarRol(['admin']), async (req,
   }
 });
 
-// Eliminar usuario
+//Eliminar usuario
 router.delete('/usuarios/:id', verificarToken, verificarRol(['admin']), async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM usuarios WHERE id = $1 RETURNING *', [req.params.id]);

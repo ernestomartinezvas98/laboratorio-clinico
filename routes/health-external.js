@@ -4,10 +4,11 @@ const { verificarToken } = require('../middleware/auth');
 
 router.get('/datos', verificarToken, async (req, res) => {
     try {
-        // Datos de ejemplo para pruebas
+
+        //Datos de ejemplo para pruebas
         const datosDemo = {
             perfil: {
-                nombre: "Paciente Demo",
+                nombre: "Paciente Prueba",
                 edad: 35,
                 peso: 70.5,
                 altura: 170

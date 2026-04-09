@@ -3,95 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Titulo del panel-->
   <title>Panel del Paciente - Laboratorio Clínico</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  <script src="js/health-widget.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <div class="dashboard-container">
     <nav class="navbar">
       <h2>Panel del Paciente</h2>
       <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
-    </nav>
-    
+    </nav>   
     <div class="dashboard-content">
+
       <!-- Información Personal -->
       <section class="card">
-        <h3>Mi Información Personal</h3>
+        <h3><i class="fas fa-user-circle"></i> Mi Información Personal</h3>
         <div id="infoPersonal"></div>
       </section>
       
       <!-- Signos Vitales -->
       <section class="card">
-        <h3>Mis Signos Vitales</h3>
+        <h3><i class="fas fa-heartbeat"></i> Mis Signos Vitales</h3>
         <div id="signosVitales"></div>
       </section>
 
-
-
-      
-      <!-- Widget de Human API - Prueba -->
+      <!-- Widget de Human API -->
 <section class="card">
-    <h3>📱 Datos desde dispositivos (Human API)</h3>
+    <h3><i class="fas fa-mobile-alt"></i> Datos de dispositivo inteligente</h3>
     <div id="widget-salud-externa">
-        <button onclick="probarHumanAPI()" class="btn-primary" style="background: #667eea;">🔌 Probar conexión con Human API</button>
+        <button onclick="probarHumanAPI()" class="btn-primary" style="background: #667eea;">Conexión con Human</button>
         <div id="resultado-human-api" style="margin-top: 15px;"></div>
     </div>
 </section>
       
       <!-- Agendar Cita -->
-      <section class="card">
-        <h3>Agendar Nueva Cita</h3>
-        <form id="agendarCitaForm">
-          <input type="date" id="fechaCita" required>
-          <input type="time" id="horaCita" required>
-          <textarea id="motivoCita" placeholder="Motivo de la cita" required></textarea>
-          <button type="submit">Agendar Cita</button>
+<section class="card">
+    <h3><i class="fas fa-calendar-alt"></i> Agendar Cita</h3>
+    <div class="agendar-cita-container">
+        <form id="agendarCitaForm" class="agendar-cita-form">
+            <div class="form-group-modern">
+                <label for="fechaCita">
+                    <span class="label-icon"></span>
+                    Fecha de la cita
+                </label>
+                <input type="date" id="fechaCita" required min="">
+                <small></small>
+            </div>           
+            <div class="form-group-modern">
+                <label for="horaCita">
+                    <span class="label-icon"></span>
+                    Hora de la cita
+                </label>
+                <select id="horaCita" required>
+                    <option value="">Selecciona una hora</option>
+                    <option value="08:00">08:00 AM</option>
+                    <option value="09:00">09:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="13:00">01:00 PM</option>
+                    <option value="14:00">02:00 PM</option>
+                    <option value="15:00">03:00 PM</option>
+                    <option value="16:00">04:00 PM</option>
+                </select>
+                <small>Horario disponible de 8:00 AM a 4:00 PM</small>
+            </div>            
+            <div class="form-group-modern">
+                <label>
+                    <span class="label-icon"></span>
+                    Motivo de la cita
+                </label>
+                <select id="motivoCitaSelect" required>
+                    <option value="">Selecciona un motivo</option>
+                    <option value="Consulta general">Consulta general</option>
+                    <option value="Resultados de exámenes">Resultados de exámenes</option>
+                    <option value="Seguimiento">Seguimiento</option>
+                    <option value="Urgencia">Urgencia</option>
+                    <option value="Otro">Otros</option>
+                </select>
+            </div>           
+            <div class="form-group-modern" id="otroMotivoGroup" style="display: none;">
+                <label for="otroMotivo">
+                    <span class="label-icon"></span>
+                    Especificar motivo
+                </label>
+                <textarea id="otroMotivo" rows="3" placeholder="Describa el motivo de su cita..."></textarea>
+            </div>           
+            <div class="form-actions">
+                <button type="submit" class="btn-agendar">
+                    <span></span> Agendar Cita
+                </button>
+                <button type="reset" class="btn-limpiar">
+                    <span></span> Limpiar
+                </button>
+            </div>
         </form>
-      </section>
+    </div>
+</section>
       
       <!-- Mis Citas -->
       <section class="card">
-        <h3>Mis Citas Agendadas</h3>
+        <h3><i class="fas fa-calendar-check"></i> Mis Citas Agendadas</h3>
         <div id="misCitas"></div>
       </section>
       
       <!-- Catálogo de Exámenes -->
       <section class="card">
-        <h3>Catálogo de Exámenes</h3>
+        <h3><i class="fas fa-microscope"></i> Catálogo de Exámenes</h3>
         <div id="catalogoExamenes"></div>
       </section>
       
       <!-- Mis Resultados -->
       <section class="card">
-        <h3>Mis Resultados de Exámenes</h3>
+        <h3><i class="fas fa-chart-line"></i> Mis Resultados de Exámenes</h3>
         <div id="misResultados"></div>
       </section>
       
       <!-- Historial Clínico -->
       <section class="card">
-        <h3>Historial Clínico</h3>
+        <h3><i class="fas fa-file-medical"></i> Historial Clínico</h3>
         <div id="historialClinico"></div>
       </section>
       
-      <!-- Contacto de Emergencia -->
-      <section class="card">
-        <h3>Contacto de Emergencia</h3>
-        <div id="contactoEmergencia"></div>
-      </section>
+      <!-- Mis Contactos de Emergencia -->
+<section class="card">
+    <div class="contacto-header">
+         <h3><i class="fas fa-address-card"></i> Mis Contactos de Emergencia</h3>
+        <button id="btnAgregarContacto" class="btn-agregar-contacto">
+            <i class="fas fa-plus-circle"></i> Agregar contacto
+        </button>
     </div>
-  </div>
-  <script src="js/health-widget.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="js/panel-paciente.js"></script>
+    <div id="listaContactosEmergencia">
+        <p class="contacto-vacio">No tienes contactos de emergencia registrados</p>
+    </div>
+</section>
 
-  <script>
+<!-- Modal para agregar/editar contacto -->
+<div id="modalContacto" class="modal">
+    <div class="modal-content modal-contacto">
+        <span class="close-modal">&times;</span>
+        <h3 id="modalContactoTitulo">Agregar contacto de emergencia</h3>
+        <form id="formContactoEmergencia">
+            <input type="hidden" id="contactoIdEdit" value="">
+            <div class="input-group">
+                <label>Nombre completo</label>
+                <input type="text" id="contactoNombreEdit" placeholder="Ej: Nombre Apellido" required>
+            </div>
+            <div class="input-group">
+                <label>Teléfono</label>
+                <input type="tel" id="contactoTelefonoEdit" placeholder="Ej: 7111-1111" required>
+            </div>
+            <div class="input-group">
+                <label>Parentesco</label>
+                <select id="contactoRelacionEdit" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Esposo/a">Esposo/a</option>
+                    <option value="Padre/Madre">Padre/Madre</option>
+                    <option value="Hermano/a">Hermano/a</option>
+                    <option value="Hijo/a">Hijo/a</option>
+                    <option value="Familiar">Familiar</option>
+                    <option value="Amigo/a">Amigo/a</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Guardar</button>
+                <button type="button" class="btn-secondary" id="btnCancelarModal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/panel-paciente.js"></script>
+<script src="js/health-widget.js"></script>
+<script>
+
 async function probarHumanAPI() {
     const token = localStorage.getItem('token');
     const resultadoDiv = document.getElementById('resultado-human-api');
     
-    resultadoDiv.innerHTML = '<p style="color: #667eea;">⏳ Conectando con Human API...</p>';
+    resultadoDiv.innerHTML = '<p style="color: #667eea;">Conectando con Human API...</p>';
     
     try {
         const response = await fetch('http://localhost:3000/api/health-external/datos', {
@@ -103,20 +197,20 @@ async function probarHumanAPI() {
             const datos = data.data;
             resultadoDiv.innerHTML = `
                 <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
-                    <h4 style="margin: 0 0 10px 0; color: #667eea;">✅ Datos obtenidos exitosamente</h4>
-                    <p><strong>👤 Perfil:</strong> ${datos.perfil.nombre}, ${datos.perfil.edad} años</p>
-                    <p><strong>⚖️ Peso:</strong> ${datos.perfil.peso} kg | <strong>📏 Altura:</strong> ${datos.perfil.altura} cm</p>
+                    <h4 style="margin: 0 0 10px 0; color: #667eea;">Datos obtenidos exitosamente</h4>
+                    <p><strong>Perfil:</strong> ${datos.perfil.nombre}, ${datos.perfil.edad} años</p>
+                    <p><strong>Peso:</strong> ${datos.perfil.peso} kg | <strong>Altura:</strong> ${datos.perfil.altura} cm</p>
                     <hr style="margin: 10px 0;">
-                    <p><strong>❤️ Última frecuencia cardíaca:</strong> ${datos.heart_rate[datos.heart_rate.length-1].value} lpm</p>
-                    <p><strong>🩸 Última presión arterial:</strong> ${datos.blood_pressure[datos.blood_pressure.length-1].systolic}/${datos.blood_pressure[datos.blood_pressure.length-1].diastolic} mmHg</p>
-                    <small style="color: #666;">⚠️ Estos son datos de demostración. Para datos reales, conecta tu cuenta.</small>
+                    <p><strong>Última frecuencia cardíaca:</strong> ${datos.heart_rate[datos.heart_rate.length-1].value} lpm</p>
+                    <p><strong>Última presión arterial:</strong> ${datos.blood_pressure[datos.blood_pressure.length-1].systolic}/${datos.blood_pressure[datos.blood_pressure.length-1].diastolic} mmHg</p>
+                    <small style="color: #666;">Estos son datos de demostración. Para datos reales, conecta tu cuenta.</small>
                 </div>
             `;
         } else {
-            resultadoDiv.innerHTML = '<p style="color: red;">❌ Error al obtener datos</p>';
+            resultadoDiv.innerHTML = '<p style="color: red;">Error al obtener datos</p>';
         }
     } catch (error) {
-        resultadoDiv.innerHTML = `<p style="color: red;">❌ Error de conexión: ${error.message}</p>`;
+        resultadoDiv.innerHTML = `<p style="color: red;">Error de conexión: ${error.message}</p>`;
     }
 }
 </script>

@@ -4,7 +4,7 @@ const { verificarToken, verificarRol } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Registrar signos vitales
+//Registrar signos vitales
 router.post('/registrar', verificarToken, verificarRol(['doctor', 'admin']), async (req, res) => {
   const { dui, presion_arterial, frecuencia_cardiaca, temperatura, peso, altura, observaciones } = req.body;
   
@@ -27,7 +27,7 @@ router.post('/registrar', verificarToken, verificarRol(['doctor', 'admin']), asy
   }
 });
 
-// Obtener mis signos vitales (paciente)
+//Obtener mis signos vitales (paciente)
 router.get('/mis-signos', verificarToken, async (req, res) => {
   try {
     const result = await pool.query(
@@ -40,7 +40,7 @@ router.get('/mis-signos', verificarToken, async (req, res) => {
   }
 });
 
-// Obtener todos los signos vitales (doctor)
+//Obtener todos los signos vitales (doctor)
 router.get('/todos', verificarToken, verificarRol(['doctor', 'admin']), async (req, res) => {
   try {
     const result = await pool.query(

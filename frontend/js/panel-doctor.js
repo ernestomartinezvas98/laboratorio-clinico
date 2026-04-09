@@ -1,14 +1,16 @@
 const API_URL = 'http://localhost:3000/api';
 
-// Verificar autenticación
+//Verificar autenticación
 const token = localStorage.getItem('token');
 const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+//Variable global para almacenar el ID de la solicitud actual
+let solicitudActualId = null;
 
 if (!token || usuario.rol !== 'doctor') {
     window.location.href = 'login.html';
 }
 
-// Tabs
+//Tabs
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const tabId = btn.dataset.tab;
@@ -26,13 +28,27 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// Buscar paciente para signos vitales
+//Buscar paciente para signos vitales
 document.getElementById('buscarPacienteSignos').addEventListener('click', async () => {
     const dui = document.getElementById('signosDui').value;
     if (!dui) {
-        alert('Ingrese el DUI del paciente');
+        Swal.fire({
+            icon: 'warning',
+            title: 'DUI requerido',
+            text: 'Por favor ingrese el DUI del paciente',
+            confirmButtonColor: '#e53e3e'
+        });
         return;
     }
+
+    Swal.fire({
+        title: 'Buscando paciente...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
         const response = await fetch(`${API_URL}/pacientes/buscar/${dui}`, {
@@ -41,6 +57,7 @@ document.getElementById('buscarPacienteSignos').addEventListener('click', async 
         const data = await response.json();
         
         if (response.ok) {
+            Swal.close();
             document.getElementById('infoPacienteSignos').innerHTML = `
                 <div class="paciente-info">
                     <p><strong>${data.nombres} ${data.apellidos}</strong></p>
@@ -48,19 +65,39 @@ document.getElementById('buscarPacienteSignos').addEventListener('click', async 
                 </div>
             `;
         } else {
-            alert('Paciente no encontrado');
+            Swal.fire({
+                icon: 'error',
+                title: 'Paciente no encontrado',
+                text: 'No existe un paciente con ese DUI',
+                confirmButtonColor: '#e53e3e'
+            });
             document.getElementById('infoPacienteSignos').innerHTML = '';
         }
     } catch (error) {
-        alert('Error al buscar paciente');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo buscar el paciente',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Registrar signos vitales
+//Registrar signos vitales
 document.getElementById('registrarSignosForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const dui = document.getElementById('signosDui').value;
+
+    if (!dui) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'DUI requerido',
+            text: 'Primero busque un paciente',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
     const signosData = {
         dui,
         presion_arterial: document.getElementById('presionArterial').value,
@@ -70,6 +107,26 @@ document.getElementById('registrarSignosForm').addEventListener('submit', async 
         altura: parseFloat(document.getElementById('altura').value),
         observaciones: document.getElementById('observaciones').value
     };
+
+    //Validar campos obligatorios
+    if (!signosData.presion_arterial && !signosData.frecuencia_cardiaca && !signosData.temperatura) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Debe ingresar al menos presión arterial, frecuencia cardíaca o temperatura',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
+    
+    Swal.fire({
+        title: 'Registrando signos vitales...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
         const response = await fetch(`${API_URL}/signos-vitales/registrar`, {
@@ -82,28 +139,53 @@ document.getElementById('registrarSignosForm').addEventListener('submit', async 
         });
         
         if (response.ok) {
-            alert('Signos vitales registrados exitosamente');
+            Swal.fire({
+                icon: 'success',
+                title: '¡Registrado!',
+                text: 'Signos vitales registrados exitosamente',
+                confirmButtonColor: '#667eea'
+            });
             document.getElementById('registrarSignosForm').reset();
             document.getElementById('infoPacienteSignos').innerHTML = '';
             cargarHistorialSignos();
         } else {
             const data = await response.json();
-            alert(data.error || 'Error al registrar signos vitales');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error || 'Error al registrar signos vitales',
+                confirmButtonColor: '#e53e3e'
+            });
         }
     } catch (error) {
-        alert('Error de conexión');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Cargar historial de signos vitales 
+//Cargar historial de signos vitales 
 async function cargarHistorialSignos() {
+    const container = document.getElementById('historialSignos');
+
+
     try {
         const response = await fetch(`${API_URL}/signos-vitales/todos`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (!response.ok) {
+            console.error('Error respuesta:', response.status);
+            container.innerHTML = '<div class="info-error">Error al cargar los datos</div>';
+            return;
+        }
+        
         const data = await response.json();
         
-        if (response.ok && data.length > 0) {
+        if (data.length > 0) {
+            container.innerHTML = '';
             let html = `
                 <table class="tabla-signos">
                     <thead>
@@ -134,23 +216,37 @@ async function cargarHistorialSignos() {
                 `;
             });
             html += `</tbody></table>`;
-            document.getElementById('historialSignos').innerHTML = html;
+            container.innerHTML = html;
         } else {
-            document.getElementById('historialSignos').innerHTML = '<p>No hay registros de signos vitales</p>';
+            container.innerHTML = '<div class="info-vacio">No hay registros de signos vitales</div>';
         }
     } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('historialSignos').innerHTML = '<p style="color: red;">Error al cargar los datos</p>';
+        console.error('Error en cargarHistorialSignos:', error);
+        container.innerHTML = '<div class="info-error">Error de conexion</div>';
     }
 }
 
-// Buscar paciente para resultados
+//Buscar paciente para resultados
 document.getElementById('buscarPacienteResultados').addEventListener('click', async () => {
     const dui = document.getElementById('resultadoDui').value;
     if (!dui) {
-        alert('Ingrese el DUI del paciente');
+         Swal.fire({
+            icon: 'warning',
+            title: 'DUI requerido',
+            text: 'Por favor ingrese el DUI del paciente',
+            confirmButtonColor: '#e53e3e'
+        });
         return;
     }
+
+     Swal.fire({
+        title: 'Buscando paciente...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
         const response = await fetch(`${API_URL}/pacientes/buscar/${dui}`, {
@@ -159,6 +255,7 @@ document.getElementById('buscarPacienteResultados').addEventListener('click', as
         const data = await response.json();
         
         if (response.ok) {
+            Swal.close();
             document.getElementById('infoPacienteResultados').innerHTML = `
                 <div class="paciente-info">
                     <p><strong>${data.nombres} ${data.apellidos}</strong></p>
@@ -167,15 +264,25 @@ document.getElementById('buscarPacienteResultados').addEventListener('click', as
             `;
             cargarCatalogoExamenes();
         } else {
-            alert('Paciente no encontrado');
+            Swal.fire({
+                icon: 'error',
+                title: 'Paciente no encontrado',
+                text: 'No existe un paciente con ese DUI',
+                confirmButtonColor: '#e53e3e'
+            });
             document.getElementById('infoPacienteResultados').innerHTML = '';
         }
     } catch (error) {
-        alert('Error al buscar paciente');
+         Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo buscar el paciente',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Cargar exámenes del paciente
+//Cargar examenes del paciente
 async function cargarExamenesPaciente(pacienteId) {
     try {
         const response = await fetch(`${API_URL}/examenes/solicitudes-paciente/${pacienteId}`, {
@@ -193,7 +300,7 @@ async function cargarExamenesPaciente(pacienteId) {
     }
 }
 
-// Cargar catálogo de exámenes para seleccionar
+//Cargar catalogo de examenes para seleccionar
 async function cargarCatalogoExamenes() {
     try {
         const response = await fetch(`${API_URL}/examenes/catalogo`, {
@@ -205,29 +312,33 @@ async function cargarCatalogoExamenes() {
         if (data && data.length > 0) {
             select.innerHTML = '<option value="">Seleccionar Examen</option>';
             data.forEach(examen => {
-                select.innerHTML += `<option value="${examen.id}">${examen.nombre} - $${examen.precio} (${examen.tiempo_entrega})</option>`;
+                select.innerHTML += `<option value="${examen.id}">${examen.nombre}</option>`;
             });
+            return true;
         } else {
             select.innerHTML = '<option value="">No hay exámenes disponibles</option>';
+            return false;
         }
     } catch (error) {
         console.error('Error al cargar catálogo:', error);
         const select = document.getElementById('examenSeleccionado');
         select.innerHTML = '<option value="">Error al cargar exámenes</option>';
+        return false;
     }
 }
 
-// Cargar solicitudes pendientes
+//Cargar solicitudes pendientes
 async function cargarSolicitudesPendientes() {
     try {
         const response = await fetch(`${API_URL}/examenes/solicitudes-pendientes`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
+        const container = document.getElementById('solicitudesPendientes');
         
         if (response.ok && data.length > 0) {
             let html = `
-                <table>
+                <table class="tabla-solicitudes">
                     <thead>
                         <tr>
                             <th>Paciente</th>
@@ -240,78 +351,202 @@ async function cargarSolicitudesPendientes() {
             data.forEach(solicitud => {
                 html += `
                     <tr>
-                        <td>${solicitud.paciente_nombre}</td>
+                        <td>${solicitud.paciente_nombre} ${solicitud.paciente_apellidos || ''}</td>
                         <td>${solicitud.examen_nombre}</td>
                         <td>${new Date(solicitud.fecha_solicitud).toLocaleDateString()}</td>
-                        <td><button onclick="procesarSolicitud(${solicitud.id})" class="btn-primary">Procesar</button></td>
+                        <td><button onclick="procesarSolicitud(${solicitud.id})" class="btn-procesar">Procesar</button></td>
                     </tr>
                 `;
             });
             html += `</tbody></table>`;
-            document.getElementById('solicitudesPendientes').innerHTML = html;
+            container.innerHTML = html;
         } else {
-            document.getElementById('solicitudesPendientes').innerHTML = '<p>No hay solicitudes pendientes</p>';
+            container.innerHTML = '<div class="info-vacio">No hay solicitudes pendientes</div>';
         }
     } catch (error) {
         console.error('Error:', error);
+        document.getElementById('solicitudesPendientes').innerHTML = '<div class="info-error">Error al cargar solicitudes</div>';
     }
 }
 
 // Procesar solicitud
-window.procesarSolicitud = (solicitudId) => {
-    document.getElementById('resultadoDui').value = '';
-    document.getElementById('examenSeleccionado').value = solicitudId;
-    alert('Ingrese el DUI del paciente para completar el resultado');
+//Ahora carga automáticamente los datos
+window.procesarSolicitud = async (solicitudId) => {
+    solicitudActualId = solicitudId;
+    try {
+        //Obtener los detalles de la solicitud
+        const response = await fetch(`${API_URL}/examenes/solicitud/${solicitudId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const solicitud = await response.json();
+        
+        if (response.ok) {
+            document.querySelector('.tab-btn[data-tab="resultados"]').click();
+
+            //Primero, asegurar que el catálogo de exámenes esté cargado
+            await cargarCatalogoExamenes();
+            
+            setTimeout(() => {
+                //Llenar el DUI del paciente
+                document.getElementById('resultadoDui').value = solicitud.paciente_dui;
+                
+                //Seleccionar el examen
+                const selectExamen = document.getElementById('examenSeleccionado');
+                selectExamen.value = solicitud.examen_id;
+                
+                //Mostrar información del paciente
+                document.getElementById('infoPacienteResultados').innerHTML = `
+                    <div class="paciente-info">
+                        <p><strong>${solicitud.paciente_nombre} ${solicitud.paciente_apellidos}</strong></p>
+                        <p>DUI: ${solicitud.paciente_dui} | Email: ${solicitud.paciente_email}</p>
+                        <p>Examen solicitado: <strong>${solicitud.examen_nombre}</strong></p>
+                    </div>
+                `;
+
+                //Verificar si se seleccionó correctamente
+                if (selectExamen.value !== String(solicitud.examen_id)) {
+                    console.log('Examen no encontrado en el catálogo, ID:', solicitud.examen_id);
+                }
+                
+                //Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Datos cargados!',
+                    text: `Paciente: ${solicitud.paciente_nombre}\nExamen: ${solicitud.examen_nombre}\n\nComplete el resultado y guarde.`,
+                    confirmButtonColor: '#667eea'
+                });
+                
+                //Enfocar el campo de resultado
+                document.getElementById('resultadoTexto').focus();
+            }, 500);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron cargar los datos de la solicitud',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo procesar la solicitud',
+            confirmButtonColor: '#e53e3e'
+        });
+    }
 };
 
-// Agregar resultado
+//Agregar resultado
 document.getElementById('agregarResultadoForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const dui = document.getElementById('resultadoDui').value;
-    const solicitudId = document.getElementById('examenSeleccionado').value;
+    const examenId = document.getElementById('examenSeleccionado').value;
     const resultado = document.getElementById('resultadoTexto').value;
-    const archivo = document.getElementById('archivoResultado').files[0];
     
-    if (!solicitudId) {
-        alert('Seleccione un examen');
+    if (!examenId) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Seleccione un examen',
+            text: 'Por favor seleccione el examen que va a registrar',
+            confirmButtonColor: '#e53e3e'
+        });
         return;
     }
-    
-    const formData = new FormData();
-    formData.append('dui', dui);
-    formData.append('solicitud_id', solicitudId);
-    formData.append('resultado', resultado);
-    if (archivo) formData.append('archivo', archivo);
+    if (!resultado) {
+         Swal.fire({
+            icon: 'warning',
+            title: 'Resultado requerido',
+            text: 'Debe escribir el resultado del examen',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
+
+    //Mostrar loading
+    Swal.fire({
+        title: 'Generando PDF...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
-        const response = await fetch(`${API_URL}/examenes/agregar-resultado`, {
+        let url = `${API_URL}/examenes/subir-resultado-doctor`;
+        let body = { dui, examen_id: examenId, resultado };
+        
+        //Si hay una solicitud pendiente, actualizarla
+        if (solicitudActualId) {
+            url = `${API_URL}/examenes/completar-solicitud/${solicitudActualId}`;
+            body = { resultado, archivo_pdf: null };
+        }
+        
+        const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` },
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
         });
         
+        const data = await response.json();
+        
         if (response.ok) {
-            alert('Resultado agregado exitosamente');
+            Swal.fire({
+                icon: 'success',
+                title: '¡Resultado guardado!',
+                text: 'El PDF se ha generado y guardado exitosamente. El paciente ya puede descargarlo.',
+                confirmButtonColor: '#667eea'
+            });            
             document.getElementById('agregarResultadoForm').reset();
             document.getElementById('infoPacienteResultados').innerHTML = '';
+            document.getElementById('resultadoTexto').value = '';
+            solicitudActualId = null;
             cargarSolicitudesPendientes();
+
         } else {
-            const data = await response.json();
-            alert(data.error || 'Error al agregar resultado');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error || 'Error al generar el resultado',
+                confirmButtonColor: '#e53e3e'
+            });
         }
     } catch (error) {
-        alert('Error de conexión');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Buscar paciente para historial
+//Buscar paciente para historial
 document.getElementById('buscarPacienteHistorial').addEventListener('click', async () => {
     const dui = document.getElementById('historialDui').value;
     if (!dui) {
-        alert('Ingrese el DUI del paciente');
+        Swal.fire({
+            icon: 'warning',
+            title: 'DUI requerido',
+            text: 'Ingrese el DUI del paciente',
+            confirmButtonColor: '#e53e3e'
+        });
         return;
     }
+     Swal.fire({
+        title: 'Buscando paciente...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
         const response = await fetch(`${API_URL}/pacientes/buscar/${dui}`, {
@@ -320,6 +555,7 @@ document.getElementById('buscarPacienteHistorial').addEventListener('click', asy
         const data = await response.json();
         
         if (response.ok) {
+            Swal.close();
             document.getElementById('infoPacienteHistorial').innerHTML = `
                 <div class="paciente-info">
                     <p><strong>${data.nombres} ${data.apellidos}</strong></p>
@@ -327,27 +563,71 @@ document.getElementById('buscarPacienteHistorial').addEventListener('click', asy
                 </div>
             `;
         } else {
-            alert('Paciente no encontrado');
+            Swal.fire({
+                icon: 'error',
+                title: 'Paciente no encontrado',
+                text: 'No existe un paciente con ese DUI',
+                confirmButtonColor: '#e53e3e'
+            });
             document.getElementById('infoPacienteHistorial').innerHTML = '';
         }
     } catch (error) {
-        alert('Error al buscar paciente');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo buscar el paciente',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Registrar historial clínico
+//Registrar historial clínico
 document.getElementById('registrarHistorialForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const dui = document.getElementById('historialDui').value;
+
+    if (!dui) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'DUI requerido',
+            text: 'Primero busque un paciente',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
+
+    const enfermedad = document.getElementById('enfermedad').value;
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const intensidad = document.getElementById('intensidad').value;
+    
+    if (!enfermedad || !fechaInicio || !intensidad) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Por favor complete enfermedad, fecha de inicio e intensidad',
+            confirmButtonColor: '#e53e3e'
+        });
+        return;
+    }
+    
     const historialData = {
         dui,
-        enfermedad: document.getElementById('enfermedad').value,
-        fecha_inicio: document.getElementById('fechaInicio').value,
-        intensidad: document.getElementById('intensidad').value,
+        enfermedad,
+        fecha_inicio: fechaInicio,
+        intensidad,
         factores_alivio: document.getElementById('factoresAlivio').value,
         factores_empeoran: document.getElementById('factoresEmpeoran').value
     };
+    
+    Swal.fire({
+        title: 'Registrando historial...',
+        text: 'Por favor espere',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     
     try {
         const response = await fetch(`${API_URL}/pacientes/registrar-historial`, {
@@ -360,25 +640,40 @@ document.getElementById('registrarHistorialForm').addEventListener('submit', asy
         });
         
         if (response.ok) {
-            alert('Historial clínico registrado');
+            Swal.fire({
+                icon: 'success',
+                title: '¡Registrado!',
+                text: 'Historial clínico registrado exitosamente',
+                confirmButtonColor: '#667eea'
+            });
             document.getElementById('registrarHistorialForm').reset();
             document.getElementById('infoPacienteHistorial').innerHTML = '';
         } else {
             const data = await response.json();
-            alert(data.error || 'Error al registrar historial');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error || 'Error al registrar historial',
+                confirmButtonColor: '#e53e3e'
+            });
         }
     } catch (error) {
-        alert('Error de conexión');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+            confirmButtonColor: '#e53e3e'
+        });
     }
 });
 
-// Cerrar sesión
+//Cerrar sesión
 document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     window.location.href = 'login.html';
 });
 
-// Inicializar
+//Inicializar
 cargarSolicitudesPendientes();
 cargarHistorialSignos();

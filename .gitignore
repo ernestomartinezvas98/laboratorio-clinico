@@ -2,19 +2,19 @@
 node_modules/
 npm-debug.log
 
-# Variables de entorno (importante: no subir contraseñas)
+# Variables de entorno (NO subir)
 .env
 .env.local
 .env.production
 
-# Base de datos local
-*.sql
-*.dump
+# Base de datos local (COMENTADO para subir laboratorio_clinico.sql)
+# *.sql
+# *.dump
 
-# Archivos subidos (mantener estructura pero no los archivos)
+# Archivos subidos (solo ignorar PDFs médicos)
 uploads/*.pdf
-uploads/*.jpg
-uploads/*.png
+# uploads/*.jpg   ← COMENTADO
+# uploads/*.png   ← COMENTADO
 
 # Editor configuraciones
 .vscode/

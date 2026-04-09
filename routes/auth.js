@@ -6,23 +6,23 @@ const { SECRET_KEY } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Registro de usuario
+//Registro de usuario
 router.post('/registro', async (req, res) => {
   const { dui, nombres, apellidos, fecha_nacimiento, telefono, email, password, rol } = req.body;
   
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const query = `
       INSERT INTO usuarios (dui, nombres, apellidos, fecha_nacimiento, telefono, email, password, rol)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id, dui, nombres, apellidos, email, rol
     `;
-    
+
     const result = await pool.query(query, [
       dui, nombres, apellidos, fecha_nacimiento, telefono, email, hashedPassword, rol || 'paciente'
     ]);
-    
+
     res.status(201).json({ message: 'Usuario registrado exitosamente', usuario: result.rows[0] });
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ router.post('/registro', async (req, res) => {
   }
 });
 
-// Login
+//Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   console.log('=== INICIO LOGIN ===');
@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
     console.log('Login exitoso para:', email);
     
     const token = jwt.sign(
-      { id: usuario.id, email: usuario.email, rol: usuario.rol, nombres: usuario.nombres },
+      { id: usuario.id, email: usuario.email, rol: usuario.rol, nombres: usuario.nombres, apellidos: usuario.apellidos,},
       SECRET_KEY,
       { expiresIn: '24h' }
     );
@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Recuperar contraseña
+//Recuperar contraseña
 router.post('/recuperar-password', async (req, res) => {
   const { email } = req.body;
   
@@ -93,7 +93,7 @@ router.post('/recuperar-password', async (req, res) => {
       return res.status(404).json({ error: 'Email no registrado' });
     }
     
-    // Aquí se enviaría un correo con instrucciones
+    //Se enviaria un correo con instrucciones
     res.json({ message: 'Se han enviado instrucciones a tu correo electrónico' });
   } catch (error) {
     console.error(error);

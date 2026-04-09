@@ -1,7 +1,7 @@
-// frontend
+//frontend
 const API_URL = 'http://localhost:3000/api';
 
-// Verificar autenticación
+//Verificar autenticación
 const token = localStorage.getItem('token');
 const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
@@ -9,7 +9,7 @@ if (!token || (usuario.rol !== 'admin' && usuario.rol !== 'administrador')) {
   window.location.href = 'login.html';
 }
 
-// Tabs
+//Tabs
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tabId = btn.dataset.tab;
@@ -22,14 +22,14 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.getElementById(`tab-${tabId}`).classList.add('active');
     btn.classList.add('active');
     
-    // Cargar datos según tab
+    //Cargar datos según tab
     if (tabId === 'pacientes') cargarListaPacientes();
     if (tabId === 'examenes') cargarListaExamenes();
     if (tabId === 'usuarios') cargarListaUsuarios();
   });
 });
 
-// Registrar paciente
+//Registrar paciente
 const registrarPacienteForm = document.getElementById('registrarPacienteForm');
 if (registrarPacienteForm) {
     registrarPacienteForm.addEventListener('submit', async (e) => {
@@ -55,7 +55,7 @@ if (registrarPacienteForm) {
       },
       body: JSON.stringify(pacienteData)
     });
-    /////////////////
+
     
     if (response.ok) {
             Swal.fire({
@@ -85,8 +85,8 @@ if (registrarPacienteForm) {
     }
 });
 }
-////////////////
-// Cargar lista de pacientes
+
+//Cargar lista de pacientes
 async function cargarListaPacientes(busqueda = '') {
   try {
     let url = `${API_URL}/admin/pacientes`;
@@ -110,8 +110,8 @@ async function cargarListaPacientes(busqueda = '') {
             <td>${paciente.email}</td>
             <td>${paciente.telefono}</td>
             <td>
-              <<button onclick="editarPaciente(${paciente.id})" class="btn-editar">✏️ Editar</button>
-              <button onclick="eliminarPaciente(${paciente.id})" class="btn-eliminar">🗑️ Eliminar</button>
+              <button onclick="editarPaciente(${paciente.id})" class="btn-editar">Editar</button>
+              <button onclick="eliminarPaciente(${paciente.id})" class="btn-eliminar">Eliminar</button>
           </td>
           </tr>
         `).join('');
@@ -123,15 +123,15 @@ async function cargarListaPacientes(busqueda = '') {
     console.error('Error:', error);
   }
 }
-//////////////////
 
-// Editar paciente
+
+//Editar paciente
 window.editarPaciente = async (id) => {
   console.log('Editar paciente llamado con ID:', id);
     console.log('Token actual:', token);
     try {
        console.log('Fetching:', `${API_URL}/admin/paciente/${id}`);
-        // Obtener datos del paciente
+        //Obtener datos del paciente
         const response = await fetch(`${API_URL}/admin/paciente/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -204,7 +204,7 @@ window.editarPaciente = async (id) => {
     }
 };
 
-// Eliminar paciente
+//Eliminar paciente
 window.eliminarPaciente = async (id) => {
     const result = await Swal.fire({
         title: '¿Estás seguro?',
@@ -250,9 +250,9 @@ window.eliminarPaciente = async (id) => {
         }
     }
 };
-/////////////////
 
-// Buscar paciente
+
+//Buscar paciente
   const btnBuscar = document.getElementById('btnBuscarPaciente');
 if (btnBuscar) {
     btnBuscar.addEventListener('click', () => {
@@ -261,7 +261,7 @@ if (btnBuscar) {
 });
 }
 
-// Registrar examen
+//Registrar examen
 const registrarExamenForm = document.getElementById('registrarExamenForm');
 if (registrarExamenForm) {
     registrarExamenForm.addEventListener('submit', async (e) => {
@@ -284,7 +284,7 @@ if (registrarExamenForm) {
     });
     
 
-    //////////////
+
      if (response.ok) {
             Swal.fire({
                 icon: 'success',
@@ -293,7 +293,7 @@ if (registrarExamenForm) {
                 confirmButtonColor: '#667eea'
             });
 
-    //if (response.ok) {
+
       document.getElementById('registrarExamenForm').reset();
       cargarListaExamenes();
     } else {
@@ -304,7 +304,7 @@ if (registrarExamenForm) {
                 text: data.error || 'Error al agregar examen',
                 confirmButtonColor: '#e53e3e'
             });
-      //alert(data.error || 'Error al agregar examen');
+
     }
   } catch (error) {
     Swal.fire({
@@ -316,9 +316,9 @@ if (registrarExamenForm) {
   }
 });
 }
-////////////////
 
-// Cargar lista de exámenes
+
+//Cargar lista de exámenes
 async function cargarListaExamenes() {
   try {
     const response = await fetch(`${API_URL}/admin/examenes`, {
@@ -336,8 +336,8 @@ async function cargarListaExamenes() {
             <td>$${examen.precio}</td>
             <td>${examen.tiempo_entrega}</td>
             <td>
-              <button onclick="editarExamen(${examen.id})" class="btn-editar">✏️ Editar</button>
-              <button onclick="eliminarExamen(${examen.id})" class="btn-eliminar">🗑️ Eliminar</button>
+              <button onclick="editarExamen(${examen.id})" class="btn-editar">Editar</button>
+              <button onclick="eliminarExamen(${examen.id})" class="btn-eliminar">Eliminar</button>
             </td>
           </tr>
         `).join('');
@@ -349,12 +349,12 @@ async function cargarListaExamenes() {
     console.error('Error:', error);
   }
 }
-/////////////////
 
-// Editar examen
+
+//Editar examen
 window.editarExamen = async (id) => {
     try {
-        // Obtener datos del examen
+        //Obtener datos del examen
         const response = await fetch(`${API_URL}/admin/examenes/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -422,7 +422,7 @@ window.editarExamen = async (id) => {
     }
 };
 
-// Eliminar examen
+//Eliminar examen
 window.eliminarExamen = async (id) => {
     const result = await Swal.fire({
         title: '¿Estás seguro?',
@@ -470,7 +470,7 @@ window.eliminarExamen = async (id) => {
 };
 
 
-// Cargar lista de usuarios
+//Cargar lista de usuarios
 async function cargarListaUsuarios() {
   try {
     const response = await fetch(`${API_URL}/admin/usuarios`, {
@@ -488,8 +488,8 @@ async function cargarListaUsuarios() {
             <td>${usuario.email}</td>
             <td>
             <span class="rol-badge ${usuario.rol}">${usuario.rol === 'admin' ? '👑 Administrador' : usuario.rol === 'doctor' ? '👨‍⚕️ Doctor' : '👤 Paciente'}</span></td><td>
-            <button onclick="editarUsuario(${usuario.id})" class="btn-editar">✏️ Editar</button>
-            <button onclick="eliminarUsuario(${usuario.id})" class="btn-eliminar">🗑️ Eliminar</button>
+            <button onclick="editarUsuario(${usuario.id})" class="btn-editar">Editar</button>
+            <button onclick="eliminarUsuario(${usuario.id})" class="btn-eliminar">Eliminar</button>
             </td>
           </tr>
         `).join('');
@@ -502,15 +502,15 @@ async function cargarListaUsuarios() {
   }
 }
 
-/////////////////
-// Editar usuario
+
+//Editar usuario
 window.editarUsuario = async (id) => {
   console.log('=== EDITAR USUARIO ===');
     console.log('ID recibido:', id);
     console.log('Token:', token);
 
     try {
-        // Obtener datos del usuario
+        //Obtener datos del usuario
         const response = await fetch(`${API_URL}/admin/usuarios/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -590,7 +590,7 @@ window.editarUsuario = async (id) => {
     }
 };
 
-// Eliminar usuario
+//Eliminar usuario
 window.eliminarUsuario = async (id) => {
     const result = await Swal.fire({
         title: '¿Estás seguro?',
@@ -637,12 +637,12 @@ window.eliminarUsuario = async (id) => {
     }
 };
 
-// Cerrar sesión
+//Cerrar sesión
 document.getElementById('logoutBtn').addEventListener('click', () => {
   localStorage.removeItem('token');
   localStorage.removeItem('usuario');
   window.location.href = 'login.html';
 });
 
-// Inicializar
+//Inicializar
 cargarListaPacientes();

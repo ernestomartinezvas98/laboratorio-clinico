@@ -10,12 +10,12 @@ class HumanaService {
         };
     }
 
-    // Método para obtener datos DEMO (sin autenticación real)
+    //Metodo para obtener datos (sin autenticación real)
     async getDatosDemo() {
-        // Estos son datos de ejemplo para que la interfaz funcione
+        //Estos son datos de ejemplo para que la interfaz funcione
         return {
             perfil: {
-                nombre: "Paciente Demo",
+                nombre: "Paciente prueba",
                 edad: 35,
                 peso: 70.5,
                 altura: 170
@@ -40,9 +40,9 @@ class HumanaService {
         };
     }
 
-    // Métodos reales (requieren OAuth)
+    //Metodos reales (requieren OAuth)
     async getPerfil() {
-        // Por ahora devuelve demo
+        //Por ahora devuelve prueba
         const demo = await this.getDatosDemo();
         return demo.perfil;
     }

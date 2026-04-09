@@ -1,13 +1,13 @@
 const API_URL = 'http://localhost:3000/api';
 
-// Manejar login
+//Manejar login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   
-   // Mostrar loading
+   //Mostrar loading
     Swal.fire({
         title: 'Iniciando sesión...',
         text: 'Por favor espere',
@@ -32,7 +32,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
  
 
 
-      // Redirigir según el rol
+      //Redirigir según el rol
       switch(data.usuario.rol) {
         case 'paciente':
           window.location.href = 'panel-paciente.html';
@@ -65,7 +65,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Manejar registro
+//Manejar registro
 document.getElementById('registerLink').addEventListener('click', () => {
   document.getElementById('registerModal').style.display = 'block';
 });
@@ -73,7 +73,7 @@ document.getElementById('registerLink').addEventListener('click', () => {
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Validar que la fecha de nacimiento no sea futura
+  //Validar que la fecha de nacimiento no sea futura
     const fechaNacimiento = document.getElementById('regFechaNacimiento').value;
     const hoy = new Date();
     const fechaNac = new Date(fechaNacimiento);
@@ -99,7 +99,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     rol: 'paciente'
   };
 
-  // Mostrar loading
+  //Mostrar loading
     Swal.fire({
         title: 'Registrando usuario...',
         text: 'Por favor espere',
@@ -144,10 +144,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         });
     }
 });
-//////////////////
+
 // Manejar recuperación de contraseña
 document.getElementById('forgotPassword').addEventListener('click', async () => { 
-  //const email = document.getElementById('forgotEmail').value;
+
   const { value: email } = await Swal.fire({
         title: 'Recuperar contraseña',
         text: 'Ingresa tu correo electrónico para recibir instrucciones',
@@ -177,7 +177,7 @@ document.getElementById('forgotPassword').addEventListener('click', async () => 
                 Swal.showLoading();
             }
         });
-  /////////////////
+
 
 
   try {
@@ -189,7 +189,7 @@ document.getElementById('forgotPassword').addEventListener('click', async () => 
     
     const data = await response.json();
 
-////////////////////////
+
     if (response.ok) {
                 Swal.fire({
                     icon: 'success',
@@ -215,9 +215,9 @@ document.getElementById('forgotPassword').addEventListener('click', async () => 
         }
     }
 });
-//////////////////
 
-// Cerrar modales
+
+//Cerrar modales
 document.querySelectorAll('.close').forEach(closeBtn => {
   closeBtn.onclick = function() {
     this.closest('.modal').style.display = 'none';
@@ -232,4 +232,44 @@ window.onclick = function(event) {
             modal.style.display = 'none';
         }
     });
+}
+//Mostrar/ocultar contraseña con FontAwesome
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        //icono
+        const icon = this.querySelector('i');
+        if (type === 'password') {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    });
+}
+//Función para cerrar modal
+function cerrarModal() {
+    document.getElementById('registerModal').style.display = 'none';
+}
+
+//Mostrar/ocultar contraseña en registro
+function toggleRegPassword() {
+    const passwordInput = document.getElementById('regPassword');
+    const icon = document.querySelector('.toggle-reg-password i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
 }

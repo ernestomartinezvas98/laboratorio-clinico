@@ -4,7 +4,7 @@ const { verificarToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Agendar cita
+//Agendar cita
 router.post('/agendar', verificarToken, async (req, res) => {
   const { fecha, hora, motivo } = req.body;
   
@@ -21,7 +21,7 @@ router.post('/agendar', verificarToken, async (req, res) => {
   }
 });
 
-// Obtener mis citas
+//Obtener mis citas
 router.get('/mis-citas', verificarToken, async (req, res) => {
   try {
     const result = await pool.query(
@@ -34,7 +34,7 @@ router.get('/mis-citas', verificarToken, async (req, res) => {
   }
 });
 
-// Eliminar cita
+//Eliminar cita
 router.delete('/:id', verificarToken, async (req, res) => {
   try {
     const result = await pool.query(

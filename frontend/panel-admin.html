@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- Titulo del panel -->
   <title>Panel Administrador - Laboratorio Clínico</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -10,6 +11,7 @@
 <body>
   <div class="dashboard-container">
     <nav class="navbar">
+       <!-- Pestañas-->
       <h2>Panel de Administración</h2>
       <div class="nav-links">
         <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
@@ -17,13 +19,13 @@
         <button class="tab-btn" data-tab="usuarios">Usuarios</button>
       </div>
       <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
-    </nav>
-    
+    </nav>    
     <div class="dashboard-content">
+
       <!-- Tab de Pacientes -->
       <div id="tab-pacientes" class="tab-content active">
         <div class="card">
-          <h3>Registrar Nuevo Paciente</h3>
+          <h3>Registro de Paciente</h3>
           <form id="registrarPacienteForm">
             <div class="form-row">
               <input type="text" id="pacienteDui" placeholder="DUI (Ej: 12345678-9)" required>
@@ -40,9 +42,9 @@
             </div>
             <button type="submit" class="btn-primary">Registrar Paciente</button>
           </form>
-        </div>
-        
+        </div>        
         <div class="card">
+
           <h3>Lista de Pacientes Registrados</h3>
           <div class="search-bar">
             <input type="text" id="buscarPaciente" placeholder="Buscar por DUI, nombre o email">
@@ -71,9 +73,9 @@
             </div>
             <button type="submit" class="btn-primary">Agregar Examen</button>
           </form>
-        </div>
-        
+        </div>        
         <div class="card">
+
           <h3>Lista de Exámenes</h3>
           <div id="listaExamenes">
             <table>

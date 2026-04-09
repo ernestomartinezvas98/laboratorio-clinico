@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Forzar la contraseña correcta
+//Forzar contraseña correcta
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -10,7 +10,7 @@ const pool = new Pool({
     port: 5432,
 });
 
-// Mostrar configuración para depuración
+//Mostrar configuración para depuración
 console.log('Configuración de BD:', {
     user: 'postgres',
     host: 'localhost',
@@ -19,9 +19,10 @@ console.log('Configuración de BD:', {
     port: 5432
 });
 
-// Crear tablas
+//Crear tablas
 const createTables = async () => {
   const queries = [
+
     // Tabla de usuarios
     `CREATE TABLE IF NOT EXISTS usuarios (
       id SERIAL PRIMARY KEY,
@@ -47,7 +48,7 @@ const createTables = async () => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
     
-    // Tabla de catálogo de exámenes
+    // Tabla de catalogo de examenes
     `CREATE TABLE IF NOT EXISTS catalogo_examenes (
       id SERIAL PRIMARY KEY,
       nombre VARCHAR(100) NOT NULL,
@@ -56,7 +57,7 @@ const createTables = async () => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
     
-    // Tabla de solicitud de exámenes
+    // Tabla de solicitud de examenes
     `CREATE TABLE IF NOT EXISTS solicitud_examenes (
       id SERIAL PRIMARY KEY,
       paciente_id INTEGER REFERENCES usuarios(id),

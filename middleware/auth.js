@@ -1,7 +1,9 @@
+
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.SECRET_KEY || 'mi-secreto-super-seguro-2024';
+const SECRET_KEY = process.env.SECRET_KEY || 'Seguridad';
 
+//Verificacion del token
 const verificarToken = (req, res, next) => {
   const token = req.headers['authorization'];
   
@@ -18,6 +20,7 @@ const verificarToken = (req, res, next) => {
   }
 };
 
+//Verificacion de rol
 const verificarRol = (rolesPermitidos) => {
   return (req, res, next) => {
     if (!req.usuario || !rolesPermitidos.includes(req.usuario.rol)) {

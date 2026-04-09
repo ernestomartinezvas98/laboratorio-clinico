@@ -1,41 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laboratorio Clínico - Sistema de Gestión</title>
-  <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Clínico - Sistema de Gestión</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="landing-container">
-    <header class="landing-header">
-      <h1>Laboratorio Clínico</h1>
-      <p>Sistema Integral de Gestión de Pacientes</p>
-    </header>
-    
-    <div class="landing-content">
-      <div class="feature-card">
-        <h3>🔬 Gestión de Pacientes</h3>
-        <p>Administra información personal, citas y expedientes clínicos</p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>📊 Resultados de Exámenes</h3>
-        <p>Visualiza y descarga resultados de laboratorio en PDF</p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>📅 Agendamiento de Citas</h3>
-        <p>Programa tus citas médicas de manera fácil y rápida</p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>📈 Historial Clínico</h3>
-        <p>Seguimiento completo de tu salud y tratamientos</p>
-      </div>
-      
-      <a href="login.html" class="btn-acceder">Acceder al Sistema</a>
+
+    <!-- Seccion principal -->
+     <div class="hero-content">
+        
+        <img src="uploads/logo.png" alt="Logo" class="hero-logo-small hero-logo-small-rounded">
+        <h1>Bienvenido/a a LABATENCION</h1>
+        <p class="hero-subtitle">Sistema Integral de Gestión de Pacientes</p>
+        <p class="hero-description">Tecnología avanzada para el cuidado de tu salud</p>
+         <div class="hero-separator">
+         <i class="fas fa-stethoscope"></i>
+        </div>
+        <div class="hero-cta-block">
+        <p class="hero-cta-text">Únete a nuestra plataforma y accede a todos los beneficios</p>
+        
+        <div class="hero-buttons">
+            <a href="login.html" class="btn-hero-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Iniciar Sesión
+            </a>
+            <a href="#" class="btn-hero-secondary" id="heroRegistro">
+                <i class="fas fa-user-plus"></i>
+                Registrarse
+            </a>
+        </div>
     </div>
-  </div>
+</div>
+     
+
+    <!-- Seccion de caracteristicas -->
+    <div class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>¿Qué ofrecemos?</h2>
+                <p>Soluciones completas para la gestión de tu salud</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Gestión de Pacientes -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Gestión de Pacientes</h3>
+                    <p>Administra información personal, citas y expedientes clínicos de manera eficiente y segura.</p>
+                    <div class="feature-tag">Completo</div>
+                </div>
+
+                <!-- Resultados de Examenes -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Resultados de Exámenes</h3>
+                    <p>Visualiza y descarga resultados de laboratorio en formato PDF con solo un clic.</p>
+                    <div class="feature-tag">Rápido</div>
+                </div>
+
+                <!-- Agendamiento de Citas -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Agendamiento de Citas</h3>
+                    <p>Programa tus citas médicas de manera fácil y rápida, desde cualquier dispositivo.</p>
+                    <div class="feature-tag">Fácil</div>
+                </div>
+
+                <!-- Historial Clinico -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Historial Clínico</h3>
+                    <p>Seguimiento completo de tu salud y tratamientos con acceso inmediato a tu información.</p>
+                    <div class="feature-tag">Seguro</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seccion de interfaz -->
+    <div class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">+20</div>
+                    <div class="stat-label">Pacientes atendidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">+15</div>
+                    <div class="stat-label">Exámenes disponibles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Acceso en línea</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Confidencialidad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de pagina -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-flask"></i>
+                    <span>LABATENCION</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Acerca de</a>
+                    <a href="#">Servicios</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Términos</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2026 LABATENCION. Todos los derechos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Redirigir a registro
+    document.getElementById('heroRegistro').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'login.html?action=register';
+    });
+    </script>
 </body>
 </html>
