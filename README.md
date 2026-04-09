@@ -1,6 +1,7 @@
 # Laboratorio Clínico - Sistema de Gestión
 
-Sistema integral para la gestión de pacientes, citas, exámenes y resultados de laboratorio clínico. Desarrollado con Node.js, Express, PostgreSQL y JavaScript puro.
+Sistema de gestión de pacientes paraun laboratorio clinico: citas, exámenes y resultados de laboratorio clínico. 
+Desarrollado con Node.js, Express, PostgreSQL y JavaScript.
 
 ## Tabla de Contenidos
 
