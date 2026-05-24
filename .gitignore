@@ -12,7 +12,7 @@ npm-debug.log
 # *.dump
 
 # Archivos subidos (solo ignorar PDFs médicos)
-uploads/*.pdf
+#uploads/*.pdf
 # uploads/*.jpg   ← COMENTADO
 # uploads/*.png   ← COMENTADO
 
