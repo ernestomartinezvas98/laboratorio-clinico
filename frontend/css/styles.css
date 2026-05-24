@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5cd38a 0%, #764ba2 100%);
     min-height: 100vh;
 }
 
@@ -75,7 +75,7 @@ body {
 
 .login-card h3 {
     text-align: center;
-    color: #667eea;
+    color: #161717;
     margin-bottom: 30px;
     font-size: 16px;
     font-weight: 500;
@@ -112,7 +112,7 @@ body {
 .btn-login {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #653e07 0%, #2a7dd6 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -190,6 +190,15 @@ body {
 }
 
 /* DASHBOARD (PANELES) */
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
 .dashboard-container {
     background: #f5f5f5;
     min-height: 100vh;
@@ -223,20 +232,25 @@ body {
     margin: 0 auto;
 }
 
-.card {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+/*-----------------------------------------------*/
+/* Títulos de las tarjetas de Registro de Paciente, Lista de Pacientes, etc*/
+.card-header .card-title,
+.card h3,                     
+.h3-title                    
+{
+  font-weight: 700; /* negrita */
+  font-family: 'Inter', sans-serif; 
+  color: #1e293b;            
 }
 
+.card-title,
 .card h3 {
-    color: #667eea;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+  font-size: 1.25rem;     
+  font-weight: 700;       
+  margin-bottom: 0rem;       
 }
+
+/*-----------------------------------------------*/
 
 /* Navegación por pestañas */
 .nav-links {
@@ -244,24 +258,14 @@ body {
     gap: 10px;
 }
 
-.tab-btn {
-    background: #f0f0f0;
-    color: #333;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
+
 
 .tab-btn.active {
     background: #667eea;
     color: white;
 }
 
-.tab-content {
-    display: none;
-}
+
 
 .tab-content.active {
     display: block;
@@ -303,16 +307,16 @@ button {
 }
 
 .btn-eliminar {
-    background: #e53e3e;
+    background: #9d0a0a;
     color: white;
     padding: 5px 10px;
     font-size: 12px;
 }
 
 .btn-editar {
-    background: #48bb78;
+    background: #146737;
     color: white;
-    padding: 5px 10px;
+    padding: 5px 16px;
     margin-right: 5px;
     font-size: 12px;
 }
@@ -348,7 +352,7 @@ button {
 }
 
 .btn-solicitar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #578512 0%, #084870 100%);
     color: white;
     padding: 8px 16px;
     border: none;
@@ -365,7 +369,7 @@ button {
 }
 
 .btn-descargar {
-    background: #48bb78;
+    background: #097315;
     color: white;
     padding: 5px 10px;
     border: none;
@@ -380,8 +384,8 @@ button {
 
 /* Botón secundario para búsqueda */
 .btn-secondary {
-    background: #48bb78;
-    color: white;
+    background: #1e7442;
+    color: rgb(244, 238, 238);
     padding: 6px 15px;
     border: none;
     border-radius: 5px;
@@ -497,207 +501,81 @@ input[type="date"]:focus {
 }
 
 /* MODAL DE REGISTRO */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
+/* ===== MEJORAS MODAL DE REGISTRO ===== */
+
+/* Contenedor del modal - altura limitada con scroll */
+#registerModal .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-.modal-content {
-    background: #1a1a2e;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 550px;
-    border-radius: 20px;
-    position: relative;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+/* Cabecera fija (opcional) */
+#registerModal .modal-header {
+    flex-shrink: 0;
 }
 
-.modal-header {
-    text-align: center;
-    padding: 25px 20px 20px;
-    background: #6477a9;
-    border-radius: 20px 20px 0 0;
-    color: white;
-    border-bottom: 1px solid rgba(102, 63, 63, 0.1);
+/* Cuerpo del formulario */
+#registerModal form {
+    flex: 1;
+    padding: 20px 25px 25px;
 }
 
-.modal-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
+/* Reorganización de campos: teléfono en fila completa */
+#registerModal .form-row-modern:nth-of-type(3) {
+    grid-template-columns: 1fr;  /* teléfono solo ocupa una columna */
+    gap: 0;
 }
 
-.modal-header h3 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.modal-header p {
-    margin: 8px 0 0;
-    font-size: 13px;
-    opacity: 0.8;
-}
-
-.modal-content form {
-    padding: 20px 25px 30px 25px;
-    background: #262651;
-    border-radius: 0 0 20px 20px;
-}
-
-.form-row-modern {
-    display: grid;
+/* Para que correo y contraseña estén juntos (ya están en una fila de 2 columnas) */
+#registerModal .form-row-modern:nth-of-type(4) {
     grid-template-columns: 1fr 1fr;
     gap: 15px;
-    margin-bottom: 15px;
 }
 
-.input-group {
-    margin-bottom: 0;
-}
-
-.input-group label {
-    color: #e2e8f0;
-    font-size: 12px;
+/* Mejorar contraste de etiquetas (fondo oscuro, letras claras) */
+#registerModal .input-group label {
+    color: #e2e8f0 !important;   /* gris claro */
     font-weight: 500;
-    margin-bottom: 5px;
-    display: block;
 }
 
-.input-group input,
-.input-group select {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 12px 15px;
-    font-size: 14px;
-    color: #333;
-    width: 100%;
-    transition: all 0.3s;
-    box-sizing: border-box;
-}
-
-.input-group input:focus,
-.input-group select:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    background: white;
-}
-
-.input-group input::placeholder {
-    color: #a0aec0;
-}
-
-.input-group select option {
-    background: white;
-    color: #333;
-}
-
-/* Contenedor de contraseña */
-.password-container {
-    position: relative;
+/* Asegurar que los botones estén siempre visibles */
+#registerModal .form-footer {
     display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.password-container input {
-    width: 100%;
-    padding: 12px 45px 12px 15px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 14px;
-    background: white;
-    color: #333;
-    box-sizing: border-box;
-}
-
-.password-container input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-}
-
-.toggle-reg-password {
-    position: absolute;
-    right: 12px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    color: #9ca3af;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    transition: all 0.3s;
-}
-
-.toggle-reg-password:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-}
-
-.form-row-single {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.form-footer {
-    display: flex;
-    gap: 15px;
+    gap: 20px;
     margin-top: 25px;
-    justify-content: center;
+    padding-bottom: 10px;
+    flex-wrap: wrap;
 }
 
-.btn-register {
-    flex: 0.5;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+/* Botones con estilo visible */
+#registerModal .btn-register,
+#registerModal .btn-cancel {
+    min-width: 140px;
     padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s;
-    max-width: 160px;
+    border: none;
 }
 
-.btn-register:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+#registerModal .btn-register {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
 }
 
-.btn-cancel {
-    flex: 0.5;
+#registerModal .btn-cancel {
     background: #e53e3e;
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    max-width: 160px;
 }
 
-.btn-cancel:hover {
-    background: #c53030;
+#registerModal .btn-register:hover,
+#registerModal .btn-cancel:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(229, 62, 62, 0.4);
+    filter: brightness(1.05);
 }
 
 .close-modal {
@@ -1069,7 +947,7 @@ input[type="date"]:focus {
 
 /* SECCION DE ESTADISTICAS */
 .stats-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5cd38a 0%, #764ba2 100%);
     padding: 60px 20px;
     color: white;
 }
@@ -1284,7 +1162,7 @@ input[type="date"]:focus {
 }
 
 .btn-agendar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #061c7c 0%, #09338e 100%);
     color: white;
     padding: 8px 20px;
     border: none;
@@ -1307,7 +1185,7 @@ input[type="date"]:focus {
 }
 
 .btn-limpiar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #087a2c 0%, #456c0a 100%);
     color: #f1f3f6;
     padding: 8px 35px;
     border: none;
@@ -1370,7 +1248,7 @@ input[type="date"]:focus {
 
 .salud-header h4 {
     margin: 0;
-    color: #667eea;
+    color: #2743c1;
 }
 
 .badge {
@@ -1457,7 +1335,7 @@ input[type="date"]:focus {
 }
 
 .btn-agregar-contacto {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #122782 0%, #07665b 100%);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -1600,9 +1478,6 @@ input[type="date"]:focus {
     border: 1px solid #e2e8f0;
 }
 
-.modal-contacto .input-group label {
-    color: #eee3e3 !important;
-}
 
 .modal-contacto .input-group input,
 .modal-contacto .input-group select {
@@ -1739,4 +1614,1038 @@ input[type="date"]:focus {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* REPORTES Y ESTADÍSTICAS */
+
+.reportes-filtros {
+    background: white;
+    border-radius: 20px;
+    padding: 20px 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    border: 1px solid #e9eef3;
+}
+
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 180px;
+}
+
+.filtro-grupo label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e66;
+    letter-spacing: 0.5px;
+}
+
+.filtro-grupo label i {
+    margin-right: 6px;
+    color: #667eea;
+}
+
+.filtro-select {
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid #dce3ec;
+    background: white;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2a48;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filtro-select:hover {
+    border-color: #667eea;
+}
+
+.rango-fechas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafd;
+    padding: 8px 15px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.fecha-input {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fecha-input span {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4a5b7a;
+    margin-left: 5px;
+}
+
+.fecha-input-modern {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #cdd9ed;
+    background: white;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.fecha-input-modern:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.rango-separador {
+    font-size: 18px;
+    color: #a0b3d9;
+    font-weight: 300;
+}
+
+.btn-actualizar {
+    background: linear-gradient(135deg, #8e580c 0%, #1a863a 100%);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-actualizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(102, 126, 234, 0.4);
+}
+
+.cards-reportes {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+}
+
+.card-reporte {
+    flex: 1;
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid #eef2f9;
+    transition: all 0.2s;
+}
+
+.card-reporte:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    border-color: #dce5f5;
+}
+
+.card-reporte h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 12px;
+}
+
+.card-reporte h4 i {
+    margin-right: 8px;
+    color: #667eea;
+}
+
+.reporte-valor {
+    font-size: 44px;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.top-lista {
+    margin-top: 20px;
+    background: #f9fbfe;
+    border-radius: 20px;
+    padding: 15px 20px;
+}
+
+.top-lista ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.top-lista li {
+    padding: 10px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.top-lista li strong {
+    background: #667eea10;
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: #667eea;
+    font-size: 13px;
+}
+
+
+@media (max-width: 700px) {
+    .rango-fechas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .rango-separador {
+        display: none;
+    }
+    .filtro-grupo {
+        min-width: 100%;
+    }
+}
+
+
+/* Título del panel */
+.navbar-brand {
+  font-weight: 700;          
+  font-size: 1.30rem;
+  letter-spacing: -0.3px;
+}
+
+/* Enlace de cerrar sesión */
+#logoutBtn {
+  color: #080808;  
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+/* Opcional: color al pasar el ratón */
+#logoutBtn:hover {
+  color: #dc3545;  
+}
+
+
+#logoutBtn {
+  font-weight: 700;          
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  letter-spacing: -0.3px;
+}
+
+
+/* Eliminar bordes negros y efectos no deseados en pestañas */
+.tab-btn,
+.tab-btn:focus,
+.tab-btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent;
+}
+
+/* Si hay bordes verticales entre botones, los eliminamos */
+.tab-btn {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+
+/* Transición suave entre pestañas */
+.tab-content {
+  transition: opacity 0.2s ease-in-out;
+  opacity: 1;
+}
+
+/* Cuando una pestaña no está activa, la ocultamos sin espacio */
+.tab-content:not(.active) {
+  display: none;
+  opacity: 0;
+}
+
+/* Cuando se activa, la mostramos gradualmente */
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*ESTILOS COMUNES PARA ADMIN, DOCTOR Y PACIENTE*/
+.main-header .navbar-brand {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.3px;
+}
+
+#logoutBtn {
+  color: #080808;
+  font-weight: 600;
+  transition: color 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+}
+#logoutBtn:hover {
+  background-color: #f8f9fa;
+  color: #dc3545;
+}
+#logoutBtn:active {
+  transform: translateY(1px);
+}
+
+/* PESTAÑAS ESTILO CHROME para admin y doctor) */
+.nav-tabs-custom {
+  border-bottom: 1px solid #f3f3f6;
+  margin-bottom: 1.5rem;
+  background-color: #667eea;   
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.tab-btn {
+  background: #667eea;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #fafafd;
+  border-radius: 0.375rem 0.375rem 0 0;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  border-right: 1px solid #dee2e6;
+}
+.tab-btn:last-child {
+  border-right: none;
+}
+.tab-btn:hover:not(.active) {
+  background: #dee2e6;
+  color: #000000;
+}
+.tab-btn.active {
+  background: rgb(246, 246, 246);
+  color: #000000;
+  border-bottom: 2px solid #0d6efd;
+  margin-bottom: -2px;
+  z-index: 1;
+  border-right: none;
+}
+.tab-btn:focus {
+  outline: none;
+}
+
+/* Transición suave entre pestañas */
+.tab-content {
+  transition: opacity 0.2s ease-in-out;
+  opacity: 1;
+}
+.tab-content:not(.active) {
+  display: none;
+  opacity: 0;
+}
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TARJETAS MEJORADAS*/
+.dashboard-content .card {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+}
+
+/*TIPOGRAFÍA GLOBAL*/
+body, .navbar-brand, #logoutBtn, .tab-btn, .card h3, .card-title {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ESTILOS EXCLUSIVOS DEL PANEL ADMIN (REPORTES) */
+.cards-reportes {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.card-reporte {
+  flex: 1;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.card-reporte:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+.reporte-valor {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.top-lista {
+  margin-top: 1rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.top-lista ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.top-lista li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.chart-container {
+  position: relative;
+  height: 250px;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .card-tools {
+    margin-top: 0.5rem;
+  }
+  .input-group {
+    width: 100% !important;
+  }
+}
+
+.reporte-valor {
+  font-size: 3.5rem !important;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+
+/*TIPOGRAFÍA GLOBAL */
+body, .navbar-brand, #logoutBtn, .tab-btn, .card h3, .card-title {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+
+/* Estilos modernos para los botones de búsqueda */
+.search-container-modern {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e0e6ed;
+  border-radius: 50px;
+  padding: 5px 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+}
+.search-container-modern:focus-within {
+  border-color: #3498db;
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.15);
+}
+.search-input-modern {
+  border: none;
+  outline: none;
+  padding: 10px;
+  flex-grow: 1;
+  font-size: 14px;
+  color: #444;
+}
+.btn-search-modern {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+.btn-search-modern:hover {
+  background: #2980b9;
+}
+
+/*BOTONES DE REGISTRO MODERNOS */
+.btn-register-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px; /* redondeados */
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+  transition: all 0.3s ease;
+}
+.btn-register-modern:hover {
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #27ae60, #219150);
+}
+.btn-register-modern i {
+  font-size: 16px;
+}
+
+/* Variante azul */
+.btn-register-modern.blue {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+}
+.btn-register-modern.blue:hover {
+  background: linear-gradient(135deg, #2980b9, #1f6e9e);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* Variante morada */
+.btn-register-modern.purple {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+.btn-register-modern.purple:hover {
+  background: linear-gradient(135deg, #5a67d8, #6b46a0);
+}
+
+/* BOTONES PREMIUM PARA PANEL DEL PACIENTE */
+:root {
+  --primary-blue: #c57b21;
+  --success-green: #8900c8;
+  --danger-red: #ff5252;
+  --neutral-gray: #64748b;
+  --request-purple: #7c4dff;
+  --download-indigo: #304ffe;
+}
+
+.btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de brillo al pasar el ratón */
+.btn-premium::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.5s;
+}
+.btn-premium:hover::after { left: 100%; }
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+.btn-premium:active { transform: scale(0.96); }
+.btn-premium i { font-size: 1.1rem; }
+
+/* COLORES INDIVIDUALES (fondo y borde) */
+
+/* Agendar Cita  */
+.btn-agenda {
+  background: #0c4dd1;           
+  border-bottom: 3px solid #f3f7fd;
+  color: #f1f3f7;
+}
+
+/* Limpiar Campos */
+.btn-clean {
+  background: #176e27;           
+  border-bottom: 3px solid #fffffc;
+  color: #fbfffd;
+}
+
+/* Eliminar Registro - Rojo */
+.btn-del {
+  background: #d02317;           
+  border-bottom: 3px solid #391d1a;
+  color: #fffcfc;
+}
+
+/* Solicitar Análisis - Púrpura */
+.btn-req {
+  background: #7c4dff;          
+  border-bottom: 3px solid #1ae0b5;
+  color: #fffcfc;
+}
+
+/* Descargar Reporte */
+.btn-down {
+  background: #cb3939;          
+  border-bottom: 3px solid #374cc8;
+  color: #ffffff;
+}
+
+/* Agregar Contacto  */
+.btn-add {
+  background: #00c853;         
+  border-bottom: 3px solid #0782d4;
+  color: #ffffff;
+}
+
+/* Alinear botones de acción en tablas */
+.table-action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+.table-action-cell .btn-premium {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* Alinear botones de acción en tablas */
+.table-action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+.table-action-cell .btn-premium {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+/* Alinear botones de acción en tablas */
+.table-action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+.table-action-cell .btn-premium {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+/* Alinear botones de acción en tablas */
+.table-action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+.table-action-cell .btn-premium {
+  margin: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* Reducir tamaño del texto dentro de las tarjetas (información personal, signos vitales, etc.) */
+.card p,
+.card .info-paciente p,
+.card #infoPersonal p,
+.card #signosVitales p,
+.card #misCitas p,
+.card #catalogoExamenes p,
+.card #misResultados p,
+.card #historialClinico p,
+.card #listaContactosEmergencia p,
+.card .contacto-info p,
+.card .top-lista li,
+.card .reporte-valor,
+.card small,
+.card .vital-value,
+.card .vital-label,
+.card .vital-time {
+  font-size: 0.85rem;   
+  line-height: 1.4;     
+}
+
+/* Separar título del contenido dentro de la tarjeta */
+.dashboard-content .card h3 {
+  margin-bottom: 1.2rem;  
+  margin-top: 0;          
+}
+
+.btn-down:hover {
+  background: #cb3939;
+  border-bottom-color: #374cc8;
+  color: white;
+}
+
+/* Botones para acciones en administrador (Editar / Eliminar) */
+.btn-edit {
+  background: #304ffe;      
+  color: white;
+  border: none;
+}
+.btn-edit:hover {
+  background: #1a237e;
+  transform: translateY(-1px);
+}
+
+.btn-delete {
+  background: #ff5252;    
+  color: white;
+  border: none;
+}
+.btn-delete:hover {
+  background: #d32f2f;
+  transform: translateY(-1px);
+}
+.table-action-cell {
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.table-action-cell .btn-premium {
+  margin: 2px;
+  padding: 6px 12px;
+}
+
+/* BOTONES PARA ADMINISTRADOR (mismo estilo que paciente) */
+.btn-admin-edit {
+  background: rgb(6, 81, 210);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 3px solid #0e0c0c;
+  color: #fdfdfd;
+}
+.btn-admin-edit:hover {
+  background: #1c3ccb;
+  transform: translateY(-1px);
+}
+
+.btn-admin-delete {
+  background: rgb(197, 23, 23);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 3px solid #0e0c0c;
+  color: #fdfdfd;
+}
+.btn-admin-delete:hover {
+  background: #e40b07;
+  transform: translateY(-1px);
+}
+
+/* Botón Procesar */
+.btn-procesar {
+    background: rgb(27, 2, 186);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 3px solid #b33ed3;
+    color: #fcfdfd;
+}
+.btn-procesar:hover {
+    background: #2b00c8;
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   MODAL DE CONTACTO DE EMERGENCIA - CORREGIDO
+   ============================================ */
+
+/* Fondo oscuro del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+}
+
+/* Contenedor del modal */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+    position: relative;
+}
+
+/* Animación de entrada */
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Cabecera del modal con título */
+.modal-content h3 {
+    background: linear-gradient(135deg, #66ea8e 0%, #4646e4 100%);
+    color: white;
+    padding: 18px 20px;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Botón de cerrar (X) - BIEN POSICIONADO */
+.close-modal {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.2);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 1;
+}
+
+.close-modal:hover {
+    background: rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+/* Formulario dentro del modal */
+.modal-content form {
+    padding: 25px 30px 30px 30px;
+    background: white;
+    border-radius: 0 0 16px 16px;
+}
+
+/* Grupos de input */
+.modal-content .input-group {
+    margin-bottom: 20px;
+}
+
+.modal-content .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #000000;
+    font-size: 14px;
+}
+
+.modal-content .input-group input,
+.modal-content .input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+    box-sizing: border-box;
+}
+
+.modal-content .input-group input:focus,
+.modal-content .input-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Botones del modal */
+.modal-content .form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.modal-content .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-content .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.modal-content .btn-secondary {
+    background: #e53e3e;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-content .btn-secondary:hover {
+    background: #c53030;
+    transform: translateY(-2px);
+}
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
+    
+    .modal-content form {
+        padding: 20px;
+    }
+    
+    .modal-content .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-content .btn-primary,
+    .modal-content .btn-secondary {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+
+/* Modal de restablecer contraseña - estilos mejorados */
+#resetModal .modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 450px;
+    margin: 15% auto;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+#resetModal h3 {
+    background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
+    color: white;
+    padding: 18px 20px;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+#resetModal .close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0,0,0,0.3);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+#resetModal .close:hover {
+    background: rgba(0,0,0,0.6);
+    transform: scale(1.1);
+}
+
+#resetModal form {
+    padding: 25px 30px 30px;
+}
+
+#resetModal .form-group {
+    margin-bottom: 20px;
+}
+
+#resetModal .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+#resetModal .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+#resetModal .form-group input:focus {
+    outline: none;
+    border-color: #667eea22;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}
+
+#resetModal .btn-login {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: 50%;
+    max-width: 200px;
+    text-align: center;
+    background: linear-gradient(135deg, #316c34 0%, #1b764a 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#resetModal .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(102,126,234,0.4);
 }

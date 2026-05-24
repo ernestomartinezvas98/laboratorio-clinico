@@ -1,110 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <!-- Titulo del panel -->
+
   <title>Panel Administrador - Laboratorio Clínico</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <!-- Bootstrap 5 CSS (necesario para AdminLTE) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AdminLTE 4 CSS (solo los componentes, no el layout) -->
+  <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+
+
+  
 </head>
 <body>
-  <div class="dashboard-container">
-    <nav class="navbar">
-       <!-- Pestañas-->
-      <h2>Panel de Administración</h2>
-      <div class="nav-links">
-        <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
-        <button class="tab-btn" data-tab="examenes">Exámenes</button>
-        <button class="tab-btn" data-tab="usuarios">Usuarios</button>
-      </div>
-      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
-    </nav>    
-    <div class="dashboard-content">
+<div class="dashboard-container">
+  <!-- Barra superior profesional (igual a la que te gustó) -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">PANEL DE ADMINISTRACION</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="logoutBtn">Cerrar Sesión <i class="fas fa-sign-out-alt"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-      <!-- Tab de Pacientes -->
-      <div id="tab-pacientes" class="tab-content active">
-        <div class="card">
-          <h3>Registro de Paciente</h3>
-          <form id="registrarPacienteForm">
-            <div class="form-row">
-              <input type="text" id="pacienteDui" placeholder="DUI (Ej: 12345678-9)" required>
-              <input type="text" id="pacienteNombres" placeholder="Nombres" required>
-              <input type="text" id="pacienteApellidos" placeholder="Apellidos" required>
-            </div>
-            <div class="form-row">
-              <input type="date" id="pacienteFechaNacimiento" required>
-              <input type="tel" id="pacienteTelefono" placeholder="Teléfono" required>
-              <input type="email" id="pacienteEmail" placeholder="Correo Electrónico" required>
-            </div>
-            <div class="form-row">
-              <input type="password" id="pacientePassword" placeholder="Contraseña" required>
-            </div>
-            <button type="submit" class="btn-primary">Registrar Paciente</button>
-          </form>
-        </div>        
-        <div class="card">
 
-          <h3>Lista de Pacientes Registrados</h3>
-          <div class="search-bar">
-            <input type="text" id="buscarPaciente" placeholder="Buscar por DUI, nombre o email">
-            <button id="btnBuscarPaciente" class="btn-secondary">Buscar</button>
-          </div>
-          <div id="listaPacientes">
-            <table>
-              <thead>
-                <tr><th>DUI</th><th>Nombres</th><th>Apellidos</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
-              </thead>
-              <tbody id="tablaPacientes"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Tab de Exámenes -->
-      <div id="tab-examenes" class="tab-content">
-        <div class="card">
-          <h3>Catálogo de Exámenes</h3>
-          <form id="registrarExamenForm">
-            <div class="form-row">
-              <input type="text" id="examenNombre" placeholder="Nombre del examen" required>
-              <input type="number" id="examenPrecio" placeholder="Precio" step="0.01" required>
-              <input type="text" id="examenTiempo" placeholder="Tiempo de entrega (Ej: 24 horas)" required>
-            </div>
-            <button type="submit" class="btn-primary">Agregar Examen</button>
-          </form>
-        </div>        
-        <div class="card">
+    <div class="content">
+      <div class="container-fluid">
+        <!-- Pestañas con estilo nav-tabs (pero usando tus botones .tab-btn para que sigan funcionando) -->
+     <div class="nav-tabs-custom">
+  <div class="d-flex">
+    <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
+    <button class="tab-btn" data-tab="examenes">Exámenes</button>
+    <button class="tab-btn" data-tab="usuarios">Usuarios</button>
+    <button class="tab-btn" data-tab="reportes">Reportes</button>
+  </div>
+</div>
 
-          <h3>Lista de Exámenes</h3>
-          <div id="listaExamenes">
-            <table>
-              <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Tiempo Entrega</th><th>Acciones</th></tr>
-              </thead>
-              <tbody id="tablaExamenes"></tbody>
-            </table>
+        <!-- El resto del contenido permanece exactamente igual (tus tabs, tarjetas, etc.) -->
+        <div class="dashboard-content">
+          <div id="tab-pacientes" class="tab-content active">
+            <div class="card">
+
+              <h3>Registro de Paciente</h3>
+              <form id="registrarPacienteForm">
+                <div class="form-row">
+                  <input type="text" id="pacienteDui" placeholder="DUI (Ej: 12345678-9)" required>
+                  <input type="text" id="pacienteNombres" placeholder="Nombres" required>
+                  <input type="text" id="pacienteApellidos" placeholder="Apellidos" required>
+                </div>
+                <div class="form-row">
+                  <input type="date" id="pacienteFechaNacimiento" required>
+                  <input type="tel" id="pacienteTelefono" placeholder="Teléfono" required>
+                  <input type="email" id="pacienteEmail" placeholder="Correo Electrónico" required>
+                </div>
+                <div class="form-row">
+                  <input type="password" id="pacientePassword" placeholder="Contraseña" required>
+                </div>
+
+                <button type="submit" class="btn-register-modern">
+                 <i class="fas fa-user-plus"></i> Registrar Paciente
+                </button>
+              
+              </form>
+            </div>
+            <div class="card">
+              <h3>Lista de Pacientes Registrados</h3>
+              <!-- Buscar paciente -->
+              <div class="search-container-modern">
+                <input type="text" id="buscarPaciente" class="search-input-modern" placeholder="Buscar por DUI, nombre o email">
+                <button id="btnBuscarPaciente" class="btn-search-modern">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+
+              <div id="listaPacientes">
+               <table>
+                <thead>
+                 <tr><th>DUI</th><th>Nombres</th><th>Apellidos</th><th>Email</th><th>Teléfono</th><th>Fecha Registro</th><th>Acciones</th></tr>
+                 </thead>
+                <tbody id="tablaPacientes"></tbody>
+               </table>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      
-      <!-- Tab de Usuarios -->
-      <div id="tab-usuarios" class="tab-content">
-        <div class="card">
-          <h3>Gestión de Usuarios del Sistema</h3>
-          <div id="listaUsuarios">
-            <table>
-              <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th></tr>
-              </thead>
-              <tbody id="tablaUsuarios"></tbody>
-            </table>
+            
+
+          <div id="tab-examenes" class="tab-content">
+            <div class="card">
+              <h3>Catálogo de Exámenes</h3>
+              <form id="registrarExamenForm">
+                <div class="form-row">
+                  <input type="text" id="examenNombre" placeholder="Nombre del examen" required>
+                  <input type="number" id="examenPrecio" placeholder="Precio" step="0.01" required>
+                  <input type="text" id="examenTiempo" placeholder="Tiempo de entrega (Ej: 24 horas)" required>
+                </div>
+
+                <button type="submit" class="btn-register-modern blue">
+                  <i class="fas fa-file-medical"></i> Agregar Examen
+                </button>
+              
+              </form>
+            </div>
+            <div class="card">
+              <h3>Lista de Exámenes</h3>
+              <div id="listaExamenes">
+                <table>
+                  <thead>
+                    <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Tiempo Entrega</th><th>Acciones</th></tr>
+                  </thead>
+                  <tbody id="tablaExamenes"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-usuarios" class="tab-content">
+            <div class="card">
+              <h3>Gestión de Usuarios del Sistema</h3>
+
+              <div id="listaUsuarios">
+               <table class="table">
+                <thead>
+                 <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Fecha Registro</th>
+                  <th>Acciones</th>
+                 </tr>
+                </thead>
+                <tbody id="tablaUsuarios"></tbody>  
+               </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-reportes" class="tab-content">
+            <div class="card">
+              <h3>Estadísticas del Laboratorio</h3>
+              <div class="reportes-filtros">
+                <div class="filtro-grupo">
+                  <label class="form-label" style="font-size: 0.9rem; font-weight: 600;">
+                    <i class="fas fa-chart-line" style="color: black;"></i> Tipo de reporte:</label>
+                  <select id="tipoReporte" class="filtro-select">
+                    <option value="diario"> Diario</option>
+                    <option value="semanal"> Semanal</option>
+                    <option value="mensual"> Mensual</option>
+                    <option value="personalizado"> Personalizado</option>
+                  </select>
+                </div>
+                <div class="filtro-grupo" id="fechaPersonalizada" style="display: none;">
+                  <label class="form-label"> Rango de fechas:</label>
+                  <div class="rango-fechas">
+                    <div class="fecha-input">
+                      <span>Desde</span>
+                      <input type="date" id="fechaInicio" class="fecha-input-modern">
+                    </div>
+                    <span class="rango-separador">→</span>
+                    <div class="fecha-input">
+                      <span>Hasta</span>
+                      <input type="date" id="fechaFin" class="fecha-input-modern">
+                    </div>
+                  </div>
+                </div>
+                <div class="filtro-grupo">
+                  <button id="btnActualizarReportes" class="btn-actualizar">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                  </button>
+                </div>
+              </div>
+
+              <div class="cards-reportes">
+                <div class="card-reporte">
+                  <h4>Exámenes diarios</h4>
+                  <div class="reporte-valor" id="examenesDiarios">0</div>
+                  <small>en el período seleccionado</small>
+                </div>
+                <div class="card-reporte">
+                  <h4> Pacientes atendidos</h4>
+                  <div class="reporte-valor" id="pacientesAtendidos">0</div>
+                  <small>pacientes únicos en el período</small>
+                </div>
+              </div>
+
+              <div class="card">
+                <h4 class="card-title" style="font-size: 0.9rem; font-weight: 600;">
+                  <i class="fas fa-chart-bar"></i> Ranking de exámenes más solicitados</h4>
+                <canvas id="chartExamenes" width="350" height="150"></canvas>
+                <div id="topExamenesLista" class="top-lista"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Modal para Editar Usuario -->
   <div id="editUserModal" class="modal">
     <div class="modal-content">
@@ -121,10 +223,12 @@
           <option value="doctor">Doctor</option>
           <option value="admin">Administrador</option>
         </select>
-        <button type="submit">Guardar Cambios</button>
+        <button type="submit">Guardar</button>
       </form>
     </div>
   </div>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/panel-admin.js"></script>
 </body>

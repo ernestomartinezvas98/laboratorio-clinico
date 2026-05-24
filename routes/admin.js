@@ -5,7 +5,7 @@ const { verificarToken, verificarRol } = require('../middleware/auth');
 
 const router = express.Router();
 
-//Registrar paciente (admin)
+/// Registrar paciente (admin)
 router.post('/registrar-paciente', verificarToken, verificarRol(['admin']), async (req, res) => {
   const { dui, nombres, apellidos, fecha_nacimiento, telefono, email, password, rol } = req.body;
   
@@ -17,6 +17,12 @@ router.post('/registrar-paciente', verificarToken, verificarRol(['admin']), asyn
        RETURNING id, dui, nombres, apellidos, email, rol`,
       [dui, nombres, apellidos, fecha_nacimiento, telefono, email, hashedPassword, rol || 'paciente']
     ); 
+    
+    // --- ENVÍO DE CORREO ---
+    const { enviarCorreoRegistro } = require('../backend/services/emailService');
+    await enviarCorreoRegistro(email, nombres).catch(console.error);
+    // -----------------------
+    
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error(error);
@@ -29,7 +35,7 @@ router.get('/pacientes', verificarToken, verificarRol(['admin']), async (req, re
   const { busqueda } = req.query;
   
   try {
-    let query = 'SELECT id, dui, nombres, apellidos, email, telefono FROM usuarios WHERE rol = $1';
+    let query = 'SELECT id, dui, nombres, apellidos, email, telefono, created_at FROM usuarios WHERE rol = $1';
     let params = ['paciente'];
     
     if (busqueda) {
@@ -190,7 +196,7 @@ router.delete('/examenes/:id', verificarToken, verificarRol(['admin']), async (r
 router.get('/usuarios', verificarToken, verificarRol(['admin']), async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, dui, nombres, apellidos, email, telefono, rol FROM usuarios ORDER BY rol, nombres'
+      'SELECT id, dui, nombres, apellidos, email, telefono, rol, created_at FROM usuarios ORDER BY rol, nombres'
     );
     res.json(result.rows);
   } catch (error) {
@@ -259,5 +265,69 @@ router.delete('/usuarios/:id', verificarToken, verificarRol(['admin']), async (r
   }
 });
 
+
+// REPORTES ESTADÍSTICOS
+// 1. Obtener resumen: exámenes diarios y pacientes atendidos en un período
+router.get('/reportes/resumen', verificarToken, verificarRol(['admin']), async (req, res) => {
+    try {
+        const { fechaInicio, fechaFin } = req.query;
+        if (!fechaInicio || !fechaFin) {
+            return res.status(400).json({ error: 'Se requieren fechas de inicio y fin' });
+        }
+
+        // Exámenes completados en el período
+        const examenesQuery = `
+            SELECT COUNT(*) as total
+            FROM solicitud_examenes
+            WHERE estado = 'completado'
+            AND DATE(fecha_solicitud) BETWEEN $1 AND $2
+        `;
+        const examenesResult = await pool.query(examenesQuery, [fechaInicio, fechaFin]);
+        const totalExamenes = parseInt(examenesResult.rows[0].total);
+
+        // Pacientes únicos atendidos en el período
+        const pacientesQuery = `
+            SELECT COUNT(DISTINCT paciente_id) as total
+            FROM solicitud_examenes
+            WHERE estado = 'completado'
+            AND DATE(fecha_solicitud) BETWEEN $1 AND $2
+        `;
+        const pacientesResult = await pool.query(pacientesQuery, [fechaInicio, fechaFin]);
+        const totalPacientes = parseInt(pacientesResult.rows[0].total);
+
+        res.json({
+            examenes_diarios: totalExamenes,
+            pacientes_atendidos: totalPacientes
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener resumen de reportes' });
+    }
+});
+
+// 2. Obtener exámenes más solicitados
+router.get('/reportes/top-examenes', verificarToken, verificarRol(['admin']), async (req, res) => {
+    try {
+        const { fechaInicio, fechaFin, limite = 5 } = req.query;
+        if (!fechaInicio || !fechaFin) {
+            return res.status(400).json({ error: 'Se requieren fechas de inicio y fin' });
+        }
+
+        const query = `
+            SELECT c.nombre as examen, COUNT(s.id) as total
+            FROM solicitud_examenes s
+            JOIN catalogo_examenes c ON s.examen_id = c.id
+            WHERE s.estado = 'completado'
+            AND DATE(s.fecha_solicitud) BETWEEN $1 AND $2
+            GROUP BY c.id, c.nombre
+            ORDER BY total DESC
+        `;
+        const result = await pool.query(query, [fechaInicio, fechaFin]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener top exámenes' });
+    }
+});
 
 module.exports = router;

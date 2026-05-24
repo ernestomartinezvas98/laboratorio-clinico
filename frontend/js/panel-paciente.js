@@ -158,7 +158,11 @@ async function cargarMisCitas() {
                                 <td>${cita.hora} \n
                                 <td>${cita.motivo} \n
                                 <td>${cita.estado} \n
-                                <td><button onclick="eliminarCita(${cita.id})" class="btn-eliminar">Eliminar</button> \n
+                                <td class="table-action-cell">
+                                <button onclick="eliminarCita(${cita.id})" class="btn-premium btn-del btn-eliminar">
+                                  <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                                </td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -271,7 +275,11 @@ async function cargarCatalogoExamenes() {
                         <td>${examen.nombre} \n
                         <td>$${examen.precio} \n
                         <td>${examen.tiempo_entrega} \n
-                        <td><button onclick="solicitarExamen(${examen.id}, '${nombreEscapado}')" class="btn-solicitar">Solicitar</button> \n
+                        <td class="table-action-cell">
+                        <button onclick="solicitarExamen(${examen.id}, '${nombreEscapado}')" class="btn-premium btn-req btn-solicitar">
+                          <i class="fas fa-hand-holding-medical"></i> Solicitar
+                        </button>
+                        </td>
                     </tr>
                 `;
             });
@@ -368,22 +376,26 @@ async function cargarMisResultados() {
                             <th>Acción</th>
                         </thead>
                     <tbody>
+
                         ${data.map(resultado => `
                             <tr>
                                 <td>${resultado.examen_nombre} \n
                                 <td>${new Date(resultado.fecha_solicitud).toLocaleDateString()} \n
                                 <td>${resultado.resultado || 'Ver PDF'} \n
                                 <td>${resultado.archivo_pdf ? 'Disponible' : 'No disponible'} \n
-                                <td>
+                                <td class="table-action-cell">
                                     ${resultado.archivo_pdf ? 
-                                        `<button onclick="descargarPDF('${resultado.archivo_pdf}')" class="btn-descargar"> 
-                                        <i class="fas fa-download"></i> Descargar
-                                    </button>` : 
-                                   '<span class="pendiente">Pendiente</span>'
+                                        `<button onclick="descargarPDF(${resultado.id}, '${resultado.archivo_pdf}')" class="btn-premium btn-down btn-descargar" style="margin-right: 5px;">
+                                          <i class="fas fa-file-pdf"></i> Descargar
+                                         </button>
+                                         <button onclick="eliminarResultado(${resultado.id})" class="btn-premium btn-del">
+                                          <i class="fas fa-trash-alt"></i> Eliminar
+                                         </button>` : 
+                                        '<span class="pendiente">Pendiente</span>'
                                     }
                                  \n
-                            </tr>
-                        `).join('')}
+                             </tr>
+                   `).join('')}
                     </tbody>
                 </table>
             `;
@@ -395,10 +407,69 @@ async function cargarMisResultados() {
     }
 }
 
-//Descargar PDF
-function descargarPDF(nombreArchivo) {
+// Descargar PDF (ya no elimina la solicitud)
+function descargarPDF(idSolicitud, nombreArchivo) {
+    // Abrir el PDF en nueva pestaña
     window.open(`http://localhost:3000/uploads/${nombreArchivo}`, '_blank');
+    Swal.fire({
+        icon: 'success',
+        title: 'Descarga iniciada',
+        text: 'El PDF se ha abierto en una nueva pestaña. Si no se muestra, revisa tu bloqueador de ventanas emergentes.',
+        confirmButtonColor: '#667eea'
+    });
 }
+
+// Eliminar resultado manualmente (solo el registro, no el PDF físico)
+async function eliminarResultado(idSolicitud) {
+    const confirm = await Swal.fire({
+        title: '¿Eliminar resultado?',
+        text: 'Esta acción eliminará el registro de tu lista. El PDF seguirá existiendo en el servidor, pero ya no aparecerá aquí. ¿Deseas continuar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#e53e3e',
+        cancelButtonColor: '#667eea'
+    });
+    
+    if (!confirm.isConfirmed) return;
+    
+    try {
+        const response = await fetch(`${API_URL}/examenes/eliminar-solicitud/${idSolicitud}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Eliminado',
+                text: 'El resultado ha sido retirado de tu lista.',
+                confirmButtonColor: '#667eea'
+            });
+            cargarMisResultados(); // Recargar la tabla
+        } else {
+            const error = await response.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.error || 'No se pudo eliminar el registro.',
+                confirmButtonColor: '#e53e3e'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor.',
+            confirmButtonColor: '#e53e3e'
+        });
+    }
+}
+
+
+
 
 //Cargar historial clínico
 async function cargarHistorialClinico() {
@@ -450,6 +521,7 @@ async function cargarContactosEmergencia() {
         const container = document.getElementById('listaContactosEmergencia');
         
         if (response.ok && data.length > 0) {
+            // Tiene contactos - mostrar lista
             let html = '<div class="contactos-lista">';
             data.forEach(contacto => {
                 html += `
@@ -461,7 +533,7 @@ async function cargarContactosEmergencia() {
                             <div class="contacto-nombre">${contacto.nombre}</div>
                             <div class="contacto-detalles">
                                 <span class="contacto-telefono">
-                                <i class = "fas fa-phone-alt"></i> ${contacto.telefono}</span>
+                                <i class="fas fa-phone-alt"></i> ${contacto.telefono}</span>
                                 <span class="contacto-relacion">
                                 <i class="fas fa-users"></i> ${contacto.relacion}</span>
                             </div>
@@ -480,18 +552,14 @@ async function cargarContactosEmergencia() {
             html += '</div>';
             container.innerHTML = html;
         } else {
+            // NO tiene contactos - mostrar mensaje SIN botón adicional
             container.innerHTML = `
                 <div class="contacto-vacio-modern">
                     <i class="fas fa-address-card"></i>
                     <p>No tienes contactos de emergencia registrados</p>
-                    <button id="btnAgregarVacio" class="btn-agregar-vacio"> Agregar contacto</button>
                 </div>
             `;
-            //Evento para el botón del estado vacío
-            const btnVacio = document.getElementById('btnAgregarVacio');
-            if (btnVacio) {
-                btnVacio.addEventListener('click', () => abrirModalAgregar());
-            }
+            // NOTA: Ya no se agrega un botón aquí, solo el mensaje
         }
     } catch (error) {
         console.error('Error:', error);

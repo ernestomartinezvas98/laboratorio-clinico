@@ -1,7 +1,8 @@
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config();
+//require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,19 +11,22 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 //Ruta absoluta para el logo en el PDF
-const uploadsPath = 'C:\\Users\\Martrinez\\Desktop\\S.D lab\\laboratorio-clinico\\uploads';
+// Después de definir uploadsPath, agrega un console.log
+const uploadsPath = 'C:\\Users\\Martrinez\\Desktop\\S.D_lab\\laboratorio-clinico\\uploads';
+app.use('/prueba', express.static(uploadsPath));
+console.log('SIRVIENDO ARCHIVOS ESTÁTICOS DESDE:', uploadsPath);
 app.use('/uploads', express.static(uploadsPath));
 app.use(express.urlencoded({ extended: true }));
 
 
 //Importar rutas
-const authRoutes = require('../routes/auth');
+const authRoutes = require('../routes/authAccess');
 const pacienteRoutes = require('../routes/pacientes');
 const citaRoutes = require('../routes/citas');
 const examenRoutes = require('../routes/examenes');
 const signosVitalesRoutes = require('../routes/signosVitales');
 const adminRoutes = require('../routes/admin');
-const healthExternalRoutes = require('../routes/health-external');
+
 
 //Usar rutas
 app.use('/api/auth', authRoutes);
@@ -31,7 +35,7 @@ app.use('/api/citas', citaRoutes);
 app.use('/api/examenes', examenRoutes);
 app.use('/api/signos-vitales', signosVitalesRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/health-external', healthExternalRoutes);
+
 
 //Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../frontend')));

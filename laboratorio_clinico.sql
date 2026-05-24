@@ -1,13 +1,14 @@
---
+
 -- PostgreSQL database dump
---
+
 
 \restrict pxYdbnoohQIr900ZoqaKpZT3VXUxgZnYnkRImCtpIIPqCXBx5PeyjhhnmhOjZgh
 
--- Dumped from database version 17.8
--- Dumped by pg_dump version 17.8
 
--- Started on 2026-04-08 18:39:35
+
+
+
+
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -26,7 +27,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 222 (class 1259 OID 16720)
+
 -- Name: catalogo_examenes; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -42,7 +43,7 @@ CREATE TABLE public.catalogo_examenes (
 ALTER TABLE public.catalogo_examenes OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 16719)
+
 -- Name: catalogo_examenes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -58,8 +59,7 @@ CREATE SEQUENCE public.catalogo_examenes_id_seq
 ALTER SEQUENCE public.catalogo_examenes_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4988 (class 0 OID 0)
--- Dependencies: 221
+
 -- Name: catalogo_examenes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -67,7 +67,7 @@ ALTER SEQUENCE public.catalogo_examenes_id_seq OWNED BY public.catalogo_examenes
 
 
 --
--- TOC entry 220 (class 1259 OID 16704)
+
 -- Name: citas; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -85,7 +85,7 @@ CREATE TABLE public.citas (
 ALTER TABLE public.citas OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 16703)
+
 -- Name: citas_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -570,11 +570,8 @@ COPY public.usuarios (id, dui, nombres, apellidos, fecha_nacimiento, telefono, e
 2	11111111-1	Doctor	Principal	1980-01-01	1111-1111	doctor@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	doctor	2026-03-23 17:44:26.066435
 3	12345678-9	María	González	1990-05-15	7012-3456	maria@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	paciente	2026-03-23 17:44:26.066435
 4	87654321-0	Carlos	Ramírez	1985-10-20	7123-4567	carlos@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	paciente	2026-03-23 17:44:26.066435
-10	99999999-9	Paciente	Prueba	1995-01-01	7777-7777	paciente@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	paciente	2026-03-26 12:03:22.483625
 5	13579246-8	Ana	Martínez	1995-03-08	7234-5678	ana@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	paciente	2026-03-23 17:44:26.066435
 1	00000000-0	Admin	Sistema	1990-01-01	0000-0000	admin@lab.com	$2a$10$lOLN3Kedc/Rp1NchJvEE1uQ/8Pq6GouLNzcxixEFBKnFgq58kSDh2	admin	2026-03-23 17:44:26.066435
-11	65342756-0	Walter Alonso	Guzman Batrez	2026-03-29	7645-9089	walterbatrez@lab.com	$2a$10$INcgbl72lUpHl69HB99aL.s1LMT9YMULJs7ie5E.TAayQtF3Rdc52	paciente	2026-03-28 09:06:58.125926
-13	23457612-9	Jorge Alexis	Hernández Cáceres	1998-01-07	7834-9876	alexishernandez@lab.com	$2a$10$KnJUcgF8RlpPGBXHIp4mjOz3MaMH3Hzdidv1R2CynBzF/RehvDjXa	paciente	2026-04-04 19:30:39.208234
 \.
 
 

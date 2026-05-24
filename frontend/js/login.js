@@ -1,5 +1,19 @@
 const API_URL = 'http://localhost:3000/api';
 
+
+// Detectar token en URL
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+        const resetModal = document.getElementById('resetModal');
+        if (resetModal) {
+            resetModal.style.display = 'block';
+            window.resetToken = token;
+        }
+    }
+});
+
 //Manejar login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -273,3 +287,79 @@ function toggleRegPassword() {
         icon.classList.add('fa-eye');
     }
 }
+
+document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newPassword = document.getElementById('resetPassword').value;
+    const confirmPassword = document.getElementById('confirmResetPassword').value;
+    if (newPassword !== confirmPassword) {
+        Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+        return;
+    }
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: window.resetToken, newPassword })
+    });
+    const data = await response.json();
+    if (response.ok) {
+        Swal.fire('Éxito', 'Contraseña actualizada. Ya puedes iniciar sesión.', 'success')
+            .then(() => {
+                document.getElementById('resetModal').style.display = 'none';
+                window.location.href = 'login.html'; // limpiar URL
+            });
+    } else {
+        Swal.fire('Error', data.error, 'error');
+    }
+});
+
+
+// Manejar restablecimiento de contraseña
+const resetForm = document.getElementById('resetForm');
+if (resetForm) {
+    resetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPassword = document.getElementById('resetPassword').value;
+        const confirmPassword = document.getElementById('confirmResetPassword').value;
+        if (newPassword !== confirmPassword) {
+            Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+            return;
+        }
+        try {
+            const response = await fetch(`${API_URL}/auth/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: window.resetToken, newPassword })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire('Éxito', 'Contraseña actualizada. Ya puedes iniciar sesión.', 'success')
+                    .then(() => {
+                        document.getElementById('resetModal').style.display = 'none';
+                        window.location.href = 'login.html';
+                    });
+            } else {
+                Swal.fire('Error', data.error, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Error de conexión', 'error');
+        }
+    });
+}
+
+
+// Cerrar modal de restablecimiento con la X
+const closeReset = document.querySelector('#resetModal .close');
+if (closeReset) {
+    closeReset.addEventListener('click', () => {
+        document.getElementById('resetModal').style.display = 'none';
+    });
+}
+
+// Cerrar modal al hacer clic fuera
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('resetModal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});

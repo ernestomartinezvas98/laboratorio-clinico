@@ -1,7 +1,7 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const express = require('express');
-
+const { enviarCorreoResultado } = require('../backend/services/emailService');
 const path = require('path');
 const pool = require('../backend/database');
 const { verificarToken, verificarRol } = require('../middleware/auth');
@@ -12,12 +12,13 @@ const router = express.Router();
 function generarPDFResultado(pacienteNombre, examenNombre, resultado, fecha, doctorNombre) {
     return new Promise((resolve, reject) => {
         const fileName = `resultado_${Date.now()}.pdf`;
-        const projectRoot = 'C:\\Users\\Martrinez\\Desktop\\S.D lab\\laboratorio-clinico';
-        const uploadDir = path.join(projectRoot, 'uploads');
-        const filePath = path.join(uploadDir, fileName);
-        const logoPath = path.join(uploadDir, 'logo.png');
-
+const uploadDir = 'C:\\Users\\Martrinez\\Desktop\\S.D_lab\\laboratorio-clinico\\uploads'; // misma que en server.js
+const filePath = path.join(uploadDir, fileName);
+const logoPath = path.join(uploadDir, 'logo.png');
         console.log('Generando PDF en:', filePath);
+        // ... resto igual
+    
+
         
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -279,7 +280,7 @@ router.post('/completar-solicitud/:id', verificarToken, verificarRol(['doctor', 
         }
         
         //Obtener datos del paciente y examen para generar PDF
-        const paciente = await pool.query('SELECT nombres, apellidos FROM usuarios WHERE id = $1', [solicitud.rows[0].paciente_id]);
+        const paciente = await pool.query('SELECT nombres, apellidos, email FROM usuarios WHERE id = $1', [solicitud.rows[0].paciente_id]);
         const examen = await pool.query('SELECT nombre FROM catalogo_examenes WHERE id = $1', [solicitud.rows[0].examen_id]);
         
         const pacienteNombre = `${paciente.rows[0].nombres} ${paciente.rows[0].apellidos}`;
@@ -297,6 +298,14 @@ router.post('/completar-solicitud/:id', verificarToken, verificarRol(['doctor', 
         //Generar PDF
         const archivoPDF = await generarPDFResultado(pacienteNombre, examenNombre, resultado, fecha, doctorNombre);
         
+        // Enviar correo al paciente
+        enviarCorreoResultado(
+            paciente.rows[0].email,
+            paciente.rows[0].nombres,
+            examenNombre,
+            new Date()
+        ).catch(console.error);
+        
         //Actualizar la solicitud pendiente
         await pool.query(
             `UPDATE solicitud_examenes 
@@ -311,5 +320,24 @@ router.post('/completar-solicitud/:id', verificarToken, verificarRol(['doctor', 
         res.status(500).json({ error: 'Error al completar solicitud' });
     }
 });
+
+// Eliminar solicitud de examen después de descargar
+router.delete('/eliminar-solicitud/:id', verificarToken, async (req, res) => {
+    try {
+        console.log('Eliminando solicitud:', req.params.id); // Log para depurar
+        const result = await pool.query(
+            'DELETE FROM solicitud_examenes WHERE id = $1 AND paciente_id = $2 RETURNING *',
+            [req.params.id, req.usuario.id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Solicitud no encontrada' });
+        }
+        res.json({ message: 'Solicitud eliminada' });
+    } catch (error) {
+        console.error('Error al eliminar solicitud:', error);
+        res.status(500).json({ error: 'Error al eliminar solicitud' });
+    }
+});
+
 
 module.exports = router;

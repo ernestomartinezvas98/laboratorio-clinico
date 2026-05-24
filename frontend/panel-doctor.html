@@ -7,30 +7,56 @@
   <title>Panel Doctor - Laboratorio Clínico</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AdminLTE 4 CSS (componentes) -->
+  <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 </head>
 <body>
   <div class="dashboard-container">
-    <nav class="navbar">
-      <!-- Pestañas-->
-      <h2>Panel del Doctor</h2>
-      <div class="nav-links">
-        <button class="tab-btn active" data-tab="signos">Signos Vitales</button>
-        <button class="tab-btn" data-tab="resultados">Resultados de Exámenes</button>
-        <button class="tab-btn" data-tab="historial">Historial Clínico</button>
-      </div>
-      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
-    </nav>    
-    <div class="dashboard-content">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <div class="container-fluid">
+      <a href="#" class="navbar-brand">PANEL DEL DOCTOR</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="logoutBtn">Cerrar Sesión <i class="fas fa-sign-out-alt"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+
+    <div class="nav-tabs-custom">
+          <div class="d-flex">
+            <button class="tab-btn active" data-tab="signos">Signos Vitales</button>
+            <button class="tab-btn" data-tab="resultados">Resultados de Exámenes</button>
+            <button class="tab-btn" data-tab="historial">Historial Clínico</button>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
 
       <!-- Tab Signos Vitales -->
       <div id="tab-signos" class="tab-content active">
         <div class="card">
           <h3>Registrar Signos Vitales</h3>
           <form id="registrarSignosForm">
-            <div class="form-row">
-              <input type="text" id="signosDui" placeholder="DUI del Paciente" required>
-              <button type="button" id="buscarPacienteSignos" class="btn-secondary">Buscar</button>
+            <!-- Buscar pacientes -->
+            <div class="search-container-modern">
+              <input type="text" id="signosDui" class="search-input-modern" placeholder="DUI del Paciente" required>
+              <button type="button" id="buscarPacienteSignos" class="btn-search-modern">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
+
             <div id="infoPacienteSignos" class="info-paciente"></div>
             <div class="form-row">
               <input type="text" id="presionArterial" placeholder="Presión Arterial (Ej: 120/80)">
@@ -44,7 +70,11 @@
             <div class="form-row">
               <textarea id="observaciones" placeholder="Observaciones médicas" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn-primary">Registrar Signos Vitales</button>
+
+            <button type="submit" class="btn-register-modern">
+              <i class="fas fa-notes-medical"></i> Registrar
+            </button>
+          
           </form>
         </div>       
         <div class="card">
@@ -61,10 +91,14 @@
         <div class="card">
           <h3>Agregar Resultados de Exámenes</h3>
           <form id="agregarResultadoForm">
-            <div class="form-row">
-              <input type="text" id="resultadoDui" placeholder="DUI del Paciente" required>
-              <button type="button" id="buscarPacienteResultados" class="btn-secondary">Buscar</button>
-            </div>
+          <!-- Buscar paciente resultado -->
+        <div class="search-container-modern">
+          <input type="text" id="resultadoDui" class="search-input-modern" placeholder="DUI del Paciente" required>
+          <button type="button" id="buscarPacienteResultados" class="btn-search-modern">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
             <div id="infoPacienteResultados" class="info-paciente"></div>
             <div class="form-row">
               <select id="examenSeleccionado" required>
@@ -75,7 +109,10 @@
               <textarea id="resultadoTexto" placeholder="Resultados del examen" rows="5" required></textarea>
             </div>
 
-            <button type="submit" class="btn-primary">Guardar Resultado</button>
+            <button type="submit" class="btn-register-modern">
+              <i class="fas fa-notes-medical"></i> Agregar Resultado
+            </button>
+          
           </form>
         </div>       
         <div class="card">
@@ -90,10 +127,14 @@
         <div class="card">
           <h3>Registrar Historial Clínico</h3>
           <form id="registrarHistorialForm">
-            <div class="form-row">
-              <input type="text" id="historialDui" placeholder="DUI del Paciente" required>
-              <button type="button" id="buscarPacienteHistorial" class="btn-secondary">Buscar</button>
+            <!-- Buscar historial del paciente  -->
+            <div class="search-container-modern">
+              <input type="text" id="historialDui" class="search-input-modern" placeholder="DUI del Paciente" required>
+              <button type="button" id="buscarPacienteHistorial" class="btn-search-modern">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
+
             <div id="infoPacienteHistorial" class="info-paciente"></div>
             <div class="form-row">
               <input type="text" id="enfermedad" placeholder="Enfermedad / Diagnóstico" required>
@@ -112,12 +153,19 @@
               <textarea id="factoresAlivio" placeholder="Factores que alivian"></textarea>
               <textarea id="factoresEmpeoran" placeholder="Factores que empeoran"></textarea>
             </div>
-            <button type="submit" class="btn-primary">Registrar Historial</button>
+
+            <button type="submit" class="btn-register-modern">
+              <i class="fas fa-notes-medical"></i> Registrar
+            </button>
+          
           </form>
+          </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/panel-doctor.js"></script>
 </body>

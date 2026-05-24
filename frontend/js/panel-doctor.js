@@ -354,7 +354,11 @@ async function cargarSolicitudesPendientes() {
                         <td>${solicitud.paciente_nombre} ${solicitud.paciente_apellidos || ''}</td>
                         <td>${solicitud.examen_nombre}</td>
                         <td>${new Date(solicitud.fecha_solicitud).toLocaleDateString()}</td>
-                        <td><button onclick="procesarSolicitud(${solicitud.id})" class="btn-procesar">Procesar</button></td>
+                        <td class="table-action-cell">
+                            <button onclick="procesarSolicitud(${solicitud.id})" class="btn-premium btn-procesar">
+                                <i class="fas fa-play"></i> Procesar
+                            </button>
+                         \n
                     </tr>
                 `;
             });
